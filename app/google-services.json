@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "779259722009",
+    "firebase_url": "https://adwheel-4fe76.firebaseio.com",
+    "project_id": "adwheel-4fe76",
+    "storage_bucket": "adwheel-4fe76.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779259722009:android:15eacd1c1c9861a1",
+        "android_client_info": {
+          "package_name": "com.adwheel.www.wheel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779259722009-lqfo7pv081kg5169ns2g4ueiuev2v9c7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDI1P6TpW2OyH1L1CMwidmeCiL-YT2SwxY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

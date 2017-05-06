@@ -1,0 +1,4 @@
+locales ['en-US']
+clear_previous_screenshots true
+tests_apk_path 'app/build/outputs/apk/app-defaultReleaseConfig-debug.apk'
+app_apk_path 'app/build/outputs/apk/app-defaultReleaseConfig-debug.apk'

@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_search"
+        android:title="@string/menu_search"
+        android:icon="@drawable/zzz_account_search" />
+    <item android:id="@+id/action_settings"
+        android:title="@string/menu_settings"
+        android:icon="@drawable/zzz_settings" />
+    <item android:id="@+id/action_about"
+        android:title="@string/menu_about"
+        android:icon="@drawable/zzz_question_mark_circle" />
+</menu>

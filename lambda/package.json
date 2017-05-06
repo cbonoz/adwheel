@@ -1,0 +1,18 @@
+{
+  "name": "random-animals-server",
+  "version": "1.0.0",
+  "description": "Lambda function for interacting with the random animals database",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "random",
+    "animals",
+    "sounds",
+    "server",
+    "lambda"
+  ],
+  "author": "Chris Buonocore",
+  "license": "ISC"
+}
