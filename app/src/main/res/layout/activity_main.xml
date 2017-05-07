@@ -19,19 +19,19 @@
 
     <FrameLayout
         android:layout_marginTop="25dp"
+        android:paddingTop="40dp"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1">
 
+        <!--app:lkwBackgroundColor="#FF9800"-->
         <rubikstudio.library.LuckyWheelView
             android:id="@+id/luckyWheel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:paddingTop="40dp"
+            android:padding="5dp"
             app:lkwBackgroundColor="#FF9800"
             app:lkwCenterImage="@drawable/wheel"
             app:lkwCursor="@drawable/ic_cursor"
@@ -48,8 +48,6 @@
         android:layout_width="wrap_content"
         android:layout_margin="20dp"
         android:textAlignment="center"
-        android:layout_marginEnd="25dp"
-        android:layout_marginStart="25dp"
         android:layout_height="50dp"/>
 
     <Button

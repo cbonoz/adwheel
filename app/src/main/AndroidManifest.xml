@@ -29,7 +29,8 @@
             android:exported="false" />
 
         <activity android:name=".activities.MainActivity"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme"/>
     </application>
 
 </manifest>

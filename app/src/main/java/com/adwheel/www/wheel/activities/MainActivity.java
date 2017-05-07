@@ -14,6 +14,7 @@ import com.adwheel.www.wheel.R;
 import com.adwheel.www.wheel.WheelApplication;
 import com.adwheel.www.wheel.managers.AdManager;
 import com.adwheel.www.wheel.managers.DialogManager;
+import com.adwheel.www.wheel.managers.PrefManager;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
@@ -44,18 +45,16 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     private RewardedVideoAd mAd;
 
     private List<LuckyItem> data = null;
-
     private List<String> topics;
-    private String loadedTopic;
-
-    private String topicHolder;
 
     private boolean isRunning = false;
 
     @Inject
-    AdManager topicManager;
-    @Inject
     DialogManager dialogManager;
+    @Inject
+    PrefManager prefManager;
+    @Inject
+    AdManager topicManager;
 
     @BindView(R.id.luckyWheel)
     LuckyWheelView luckyWheelView;
@@ -63,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     @OnClick(R.id.luckyWheel)
     void onWheelClick() {
         if (!isRunning) {
-            int index = getRandomIndex(topics);
-            loadedTopic = topics.get(index);
+            int index = getRandomIndex(data);
+            String loadedTopic = data.get(index).topicString;
             loadVideoAdWithTopics(Arrays.asList(loadedTopic));
             luckyWheelView.startLuckyWheelWithTargetIndex(index);
         }
@@ -103,7 +102,8 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
             @Override
             public void LuckyRoundItemSelected(int index) {
                 isRunning = false;
-                showVideoAd();
+                String topicsString = data.get(index).topicString;
+                showVideoAd(topicsString);
             }
         });
 
@@ -136,8 +136,8 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
             adRequestBuilder = adRequestBuilder.addKeyword(topic);
         }
         final AdRequest adRequest = adRequestBuilder.build();
-        topicHolder = TextUtils.join(", ", adRequest.getKeywords());
-        Log.d(TAG, "Loading ad topics: " + topicHolder);
+        String topicString = TextUtils.join(", ", adRequest.getKeywords());
+        Log.d(TAG, "Loading ad topics: " + topicString);
         // mAd.loadAd(getString(R.string.ad_unit_id), adRequest);
     }
 
@@ -199,11 +199,13 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         Toast.makeText(this, "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
     }
 
-    private void showVideoAd() {
-        makeToast("showVideoAd called with topics: " + topicHolder);
+    private void showVideoAd(String topicString) {
+        makeToast("showVideoAd");
         if (mAd.isLoaded()) {
             // Add back in for deployment.
             // mAd.show();
+            // TODO: save ad viewing to history.
+            topicManager.saveTopicString(topicString);
         } else {
             final String message = "Video not loaded yet";
             makeToast(message);
@@ -214,5 +216,21 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     private void makeToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
+
+//    @Subscribe
+//    public void onEvent(LoadResponseHistoryCompleteEvent event) {
+//        Log.d(TAG, "onEvent - " + event.getClass().getSimpleName());
+//        loadingSpinner.setVisibility(View.GONE);
+//        responses = event.getResponses();
+//        questionManager.setResponses(responses);
+//        if (event.isSuccess()) {
+//            Log.d(TAG, "Success: " + responses.size() + " responses: " + responses.toArray());
+//            slimAdapter.updateData(responses);
+//            // TODO: add response visualizations in app for each response type.
+//            // renderChartViewForResponseList(responses, "Bar Chart 1");
+//        } else {
+//            Toast.makeText(this, R.string.connection_error, Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
 }

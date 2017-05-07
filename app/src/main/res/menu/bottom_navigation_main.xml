@@ -5,6 +5,9 @@
     <item android:id="@+id/action_settings"
         android:title="@string/menu_settings"
         android:icon="@drawable/zzz_settings" />
+    <item android:id="@+id/action_history"
+        android:title="@string/menu_history"
+        android:icon="@drawable/zzz_history" />
     <item android:id="@+id/action_about"
         android:title="@string/menu_about"
         android:icon="@drawable/zzz_question_mark_circle" />

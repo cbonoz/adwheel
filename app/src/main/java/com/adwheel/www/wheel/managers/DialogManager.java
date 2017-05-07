@@ -5,18 +5,14 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.text.Editable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
@@ -26,17 +22,25 @@ import android.widget.Toast;
 import com.adwheel.www.wheel.R;
 import com.adwheel.www.wheel.WheelApplication;
 import com.adwheel.www.wheel.activities.MainActivity;
+import com.adwheel.www.wheel.adapters.MyTopicAdapter;
+import com.adwheel.www.wheel.models.HistoryItem;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+
+import net.idik.lib.slimadapter.SlimAdapter;
+import net.idik.lib.slimadapter.SlimInjector;
+import net.idik.lib.slimadapter.viewinjector.IViewInjector;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static com.adwheel.www.wheel.managers.AdManager.BIRTH_YEAR_LOC;
 import static com.adwheel.www.wheel.managers.AdManager.DEFAULT_BIRTH_YEAR;
-import static com.adwheel.www.wheel.managers.AdManager.FAM_LOC;
+import static com.adwheel.www.wheel.managers.AdManager.FAMILY_LOC;
 import static com.adwheel.www.wheel.managers.AdManager.GENDER_LOC;
 import static com.adwheel.www.wheel.managers.AdManager.MALE;
 import static com.adwheel.www.wheel.managers.AdManager.TOPIC_LOC;
@@ -137,13 +141,13 @@ public class DialogManager {
         });
 
         // Set family progress bar.
-        boolean family = prefManager.getBoolean(FAM_LOC);
+        boolean family = prefManager.getBoolean(FAMILY_LOC);
         familySwitch = (Switch) view.findViewById(R.id.familySwitch);
         familySwitch.setChecked(family);
         familySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                prefManager.saveBoolean(FAM_LOC, isChecked);
+                prefManager.saveBoolean(FAMILY_LOC, isChecked);
                 Log.d(TAG, "onCheckedChanged: " + isChecked);
             }
         });
@@ -157,15 +161,23 @@ public class DialogManager {
         MaterialDialog optionDialog = new MaterialDialog.Builder(context)
                 .title(R.string.search_title)
                 .customView(R.layout.select_topics_dialog, false)
-                .positiveText(R.string.done)
+                .positiveText(R.string.save_and_play)
                 .autoDismiss(true)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         String topicString = TextUtils.join(",", myTopics);
                         prefManager.saveString(TOPIC_LOC, topicString);
-                        Toast.makeText(context, "loadVideoWithTopics: " + topicString, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Loading ad: " + topicString, Toast.LENGTH_SHORT).show();
                         ((MainActivity) context).loadVideoAdWithTopics(myTopics);
+                    }
+                }).negativeText(R.string.save)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        String topicString = TextUtils.join(",", myTopics);
+                        prefManager.saveString(TOPIC_LOC, topicString);
+                        Toast.makeText(context, "saved topics", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .show();
@@ -176,7 +188,7 @@ public class DialogManager {
         final ListView myList = (ListView) container.findViewById(R.id.optionList);
         myList.setItemsCanFocus(true);
 
-        final MyAdapter myAdapter = new MyAdapter(context, optionView, myTopics);
+        final MyTopicAdapter myTopicAdapter = new MyTopicAdapter(context, optionView, myTopics);
 
 
         String topics = prefManager.getString(TOPIC_LOC, null);
@@ -192,8 +204,8 @@ public class DialogManager {
             myTopics.add(exampleOption);
         }
 
-        myList.setAdapter(myAdapter);
-        myAdapter.notifyDataSetChanged();
+        myList.setAdapter(myTopicAdapter);
+        myTopicAdapter.notifyDataSetChanged();
 
         Button addButton = (Button) optionView.findViewById(R.id.addOptionButton);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -201,7 +213,7 @@ public class DialogManager {
             public void onClick(View v) {
                 if (myTopics.size() < MAX_OPTIONS) {
                     myTopics.add(exampleOption);
-                    myAdapter.notifyDataSetChanged();
+                    myTopicAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(context, "Max Topic Count Exceeded", Toast.LENGTH_SHORT).show();
                 }
@@ -211,89 +223,42 @@ public class DialogManager {
         return optionDialog;
     }
 
-    private class MyAdapter extends BaseAdapter {
-        private final Activity activity;
-        private final View optionView;
-        private final List<String> myOptions;
+    public MaterialDialog createHistoryDialog(final Activity context) {
 
-        public MyAdapter(Activity activity, View optionView, List<String> myOptions) {
-            this.activity = activity;
-            this.optionView = optionView;
-            this.myOptions = myOptions;
-        }
+        final RecyclerView responseListView;
 
-        public int getCount() {
-            return myOptions.size();
-        }
-
-        public String getItem(int position) {
-            return myOptions.get(position);
-        }
-
-        public long getItemId(int position) {
-            return position;
-        }
-
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            LayoutInflater inflater = activity.getLayoutInflater();
-            convertView = inflater.inflate(R.layout.option_item, parent, false);
-            holder = new ViewHolder();
-            holder.optionEditText = (EditText) convertView.findViewById(R.id.optionEditText);
-            holder.deleteButton = (Button) convertView.findViewById(R.id.deleteButton);
-
-            holder.optionEditText.setFocusable(true);
-            holder.optionEditText.requestFocus();
-            holder.optionEditText.setText(getItem(position));
-
-            // / this updates tag of
-            // the button view as we
-            // scroll ///
-
-            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View view) {
-                    if (myOptions.size() > 1) {
-                        myOptions.remove(position);
-                        Log.d("GCM", "Item removed from position: " + position);
-                        notifyDataSetChanged();
-                    } else {
-                        Toast.makeText(activity, "You must have at least one option", Toast.LENGTH_SHORT).show();
+        final MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .autoDismiss(true)
+                .title(R.string.history_title)
+                .customView(R.layout.history_dialog, false)
+                .positiveText(R.string.save)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        Toast.makeText(context, "preferences saved", Toast.LENGTH_SHORT).show();
                     }
+                })
+                .build();
 
-                }
-            });
+        final View view = dialog.getCustomView();
 
-            holder.optionEditText.addTextChangedListener(new TextWatcher() {
+        responseListView = (RecyclerView) view.findViewById(R.id.historyRecyclerView);
+        responseListView.setLayoutManager(new LinearLayoutManager(context));
 
-                public void onTextChanged(CharSequence s, int start,
-                                          int before, int count) {
-                    // TODO Auto-generated method stub
-
-                }
-
-                public void beforeTextChanged(CharSequence s, int start,
-                                              int count, int after) {
-                    // TODO Auto-generated method stub
-
-                }
-
-                public void afterTextChanged(Editable s) {
-                    if(position < myOptions.size()) {
-                        myOptions.set(position, s.toString());
+        final SlimAdapter slimAdapter = SlimAdapter.create()
+                .register(R.layout.history_item, new SlimInjector<HistoryItem>() {
+                    @Override
+                    public void onInject(HistoryItem data, IViewInjector injector) {
+                        final String metaData = String.format(Locale.US, "%s", new Date(data.timestamp));
+                        injector.text(R.id.topics, data.topics)
+                                .text(R.id.metadata, metaData)
+                                .textColor(R.id.metadata, R.color.primary_light)
+                                .textSize(R.id.metadata, 12);
                     }
-                }
-            });
+                }).attachTo(responseListView);
 
-            holder.deleteButton.setBackgroundResource(R.drawable.zzz_delete);
 
-            return convertView;
-        }
+        return dialog;
     }
 
-    private class ViewHolder {
-        EditText optionEditText;
-        Button deleteButton;
-    }
 }
