@@ -168,6 +168,24 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         Log.d(TAG, "data: " + data);
     }
 
+    private void showVideoAd(String topicString) {
+        makeToast("showVideoAd");
+        if (mAd.isLoaded()) {
+            // Add back in for deployment.
+            // mAd.show();
+            // TODO: save ad viewing to history.
+            adManager.saveTopicString(topicString);
+        } else {
+            final String message = "Video not loaded yet";
+            makeToast(message);
+            Log.e(TAG, message);
+        }
+    }
+
+    private void makeToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
     // ** Ad Video player lifecycle callback methods. ** //
 
     @Override
@@ -206,24 +224,4 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     public void onRewardedVideoStarted() {
         Toast.makeText(this, "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
     }
-
-    private void showVideoAd(String topicString) {
-        makeToast("showVideoAd");
-        if (mAd.isLoaded()) {
-            // Add back in for deployment.
-            // mAd.show();
-            // TODO: save ad viewing to history.
-            adManager.saveTopicString(topicString);
-        } else {
-            final String message = "Video not loaded yet";
-            makeToast(message);
-            Log.e(TAG, message);
-        }
-    }
-
-    private void makeToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-
 }
