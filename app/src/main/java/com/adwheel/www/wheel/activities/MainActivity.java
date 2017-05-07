@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.adwheel.www.wheel.R;
 import com.adwheel.www.wheel.WheelApplication;
-import com.adwheel.www.wheel.managers.AdTopicManager;
+import com.adwheel.www.wheel.managers.AdManager;
 import com.adwheel.www.wheel.managers.DialogManager;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdRequest;
@@ -22,6 +22,7 @@ import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     private boolean isRunning = false;
 
     @Inject
-    AdTopicManager topicManager;
+    AdManager topicManager;
     @Inject
     DialogManager dialogManager;
 
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         if (!isRunning) {
             int index = getRandomIndex(topics);
             loadedTopic = topics.get(index);
-            loadVideoAd(loadedTopic);
+            loadVideoAdWithTopics(Arrays.asList(loadedTopic));
             luckyWheelView.startLuckyWheelWithTargetIndex(index);
         }
     }
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
         ButterKnife.bind(this);
 
-        topics = topicManager.getTopics();
+        topics = topicManager.getExampleTopics();
 
         // Use an activity context to get the rewarded video instance.
         mAd = MobileAds.getRewardedVideoAdInstance(this);
@@ -105,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                 showVideoAd();
             }
         });
-
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -130,14 +130,14 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                 });
     }
 
-    private void loadVideoAd(String... topics) {
-        AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
+    public void loadVideoAdWithTopics(List<String> topics) {
+        AdRequest.Builder adRequestBuilder = topicManager.createAdBuilderFromPrefs();
         for (String topic : topics) {
             adRequestBuilder = adRequestBuilder.addKeyword(topic);
         }
         final AdRequest adRequest = adRequestBuilder.build();
         topicHolder = TextUtils.join(", ", adRequest.getKeywords());
-        Log.d(TAG, "Loading ad: " + adRequest);
+        Log.d(TAG, "Loading ad topics: " + topicHolder);
         // mAd.loadAd(getString(R.string.ad_unit_id), adRequest);
     }
 
@@ -147,14 +147,14 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         for (int i = 0; i < numTopics; i++) {
             LuckyItem luckyItem = new LuckyItem();
             if (i % 2 == 0) {
-                luckyItem.color = 0xffFFE0B2;
+                luckyItem.color = 0xffEDE7F6;
             } else if (i % 3 == 0) {
-                luckyItem.color = 0xffFFCC80;
+                luckyItem.color = 0xffD1C4E9;
             } else {
-                luckyItem.color = 0xffFFF3E0;
+                luckyItem.color = 0xffB39DDB;
             }
             luckyItem.text = topics.get(i);
-            luckyItem.icon = R.drawable.lion;
+            luckyItem.icon = R.drawable.star_icon;
             data.add(luckyItem);
         }
         Log.d(TAG, "data: " + data);

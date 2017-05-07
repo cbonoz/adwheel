@@ -46,7 +46,7 @@ public class PielView extends View {
     private List<LuckyItem> mLuckyItemList;
 
     // Added to play click sound.
-    private SoundPoolPlayer soundPoolPlayer;
+    // private SoundPoolPlayer soundPoolPlayer;
 
     private PieRotateListener mPieRotateListener;
     public interface PieRotateListener {
@@ -176,9 +176,9 @@ public class PielView extends View {
 
         Rect rect = new Rect(x - imgWidth/2, y - imgWidth/2, x + imgWidth/2, y + imgWidth/2);
         canvas.drawBitmap(bitmap, null, rect, null);
-        if (isRunning) {
-            soundPoolPlayer.playShortResource(R.raw.click_one);
-        }
+//        if (isRunning) {
+//            soundPoolPlayer.playShortResource(R.raw.click_one);
+//        }
     }
 
     private void drawCenterImage(Canvas canvas, Drawable drawable) {
@@ -240,13 +240,13 @@ public class PielView extends View {
                 .setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
-                        soundPoolPlayer = new SoundPoolPlayer(getContext());
+                        // soundPoolPlayer = new SoundPoolPlayer(getContext());
                         isRunning = true;
                     }
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        soundPoolPlayer.release();
+                        // soundPoolPlayer.release();
                         isRunning = false;
                         if (mPieRotateListener != null) {
                             mPieRotateListener.rotateDone(mTargetIndex);

@@ -2,7 +2,7 @@ package com.adwheel.www.wheel.injection;
 
 
 import com.adwheel.www.wheel.WheelApplication;
-import com.adwheel.www.wheel.managers.AdTopicManager;
+import com.adwheel.www.wheel.managers.AdManager;
 import com.adwheel.www.wheel.managers.DialogManager;
 import com.adwheel.www.wheel.managers.PrefManager;
 import com.google.gson.Gson;
@@ -41,13 +41,14 @@ public class WheelModule {
 
     @Provides
     @Singleton
-    AdTopicManager providesAdTopicManager(PrefManager prefManager) {
-        return new AdTopicManager(prefManager);
+    AdManager providesAdTopicManager(PrefManager prefManager) {
+        return new AdManager(prefManager);
     }
+
     @Provides
     @Singleton
-    DialogManager provideDialogManager(WheelApplication application) {
-        return new DialogManager(application);
+    DialogManager provideDialogManager(WheelApplication application, PrefManager prefManager) {
+        return new DialogManager(application, prefManager);
     }
 
 }

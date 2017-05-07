@@ -9,6 +9,13 @@
     android:layout_height="match_parent"
     tools:context="com.adwheel.www.wheel.activities.MainActivity">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_gravity="center|top"
+        android:src="@drawable/adwheel_logo" />
+
 
     <FrameLayout
         android:layout_marginTop="25dp"
@@ -22,7 +29,9 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:paddingTop="10dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="40dp"
             app:lkwBackgroundColor="#FF9800"
             app:lkwCenterImage="@drawable/wheel"
             app:lkwCursor="@drawable/ic_cursor"
