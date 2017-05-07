@@ -47,7 +47,7 @@
     <string name="settings_title">Settings</string>
     <string name="search_title">Generate an ad based on keywords</string>
     <string name="about_title">About</string>
-    <string name="history_title">History</string>
+    <string name="history_title">Your Topic History</string>
 
 
 </resources>

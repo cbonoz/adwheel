@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adwheel.www.wheel.R;
@@ -26,6 +27,7 @@ import com.adwheel.www.wheel.adapters.MyTopicAdapter;
 import com.adwheel.www.wheel.models.HistoryItem;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.ybq.android.spinkit.SpinKitView;
 
 import net.idik.lib.slimadapter.SlimAdapter;
 import net.idik.lib.slimadapter.SlimInjector;
@@ -120,15 +122,21 @@ public class DialogManager {
         });
 
         // Set year progress bar.
-        long year = prefManager.getLong(BIRTH_YEAR_LOC, DEFAULT_BIRTH_YEAR);
+        final long year = prefManager.getLong(BIRTH_YEAR_LOC, DEFAULT_BIRTH_YEAR);
 
         yearSeekBar = (DiscreteSeekBar) view.findViewById(R.id.yearSeekBar);
         yearSeekBar.setProgress((int) year);
+
+        final TextView yearSelectedText = (TextView) view.findViewById(R.id.selectedBirthText);
+        yearSelectedText.setText(year+"");
+
         yearSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 prefManager.saveLong(BIRTH_YEAR_LOC, value);
                 Log.d(TAG, "onProgressChanged: " + value);
+                yearSelectedText.setText(value+"");
+
             }
 
             @Override
@@ -160,7 +168,7 @@ public class DialogManager {
     public MaterialDialog createSearchDialog(final Activity context) {
         final List<String> myTopics = new ArrayList<>();
 
-        MaterialDialog optionDialog = new MaterialDialog.Builder(context)
+        MaterialDialog topicsDialog = new MaterialDialog.Builder(context)
                 .title(R.string.search_title)
                 .customView(R.layout.select_topics_dialog, false)
                 .positiveText(R.string.save_and_play)
@@ -184,7 +192,7 @@ public class DialogManager {
                 })
                 .show();
 
-        View optionView = optionDialog.getCustomView();
+        View optionView = topicsDialog.getCustomView();
         LinearLayout container = (LinearLayout) optionView.findViewById(R.id.optionContainer);
 
         final ListView myList = (ListView) container.findViewById(R.id.optionList);
@@ -222,7 +230,7 @@ public class DialogManager {
             }
         });
 
-        return optionDialog;
+        return topicsDialog;
     }
 
     public MaterialDialog createHistoryDialog(final Activity context) {
@@ -247,6 +255,9 @@ public class DialogManager {
         historyListView = (RecyclerView) view.findViewById(R.id.historyRecyclerView);
         historyListView.setLayoutManager(new LinearLayoutManager(context));
 
+        SpinKitView loadingSpinner = (SpinKitView) view.findViewById(R.id.loadingSpinner);
+        loadingSpinner.setVisibility(View.VISIBLE);
+
         final SlimAdapter slimAdapter = SlimAdapter.create()
                 .register(R.layout.history_item, new SlimInjector<HistoryItem>() {
                     @Override
@@ -259,10 +270,17 @@ public class DialogManager {
                     }
                 }).attachTo(historyListView);
 
-
         // TODO: make async.
         List<HistoryItem> historyItems = adManager.getTopicHistory();
         slimAdapter.updateData(historyItems);
+
+        loadingSpinner.setVisibility(View.GONE);
+        if (historyItems.isEmpty()) {
+            TextView noHistoryText = (TextView) view.findViewById(R.id.noHistoryText);
+            noHistoryText.setVisibility(View.VISIBLE);
+        }
+
+
         return dialog;
     }
 

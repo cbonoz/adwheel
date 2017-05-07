@@ -128,9 +128,9 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                             case R.id.action_history:
                                 dialog = dialogManager.createHistoryDialog(MainActivity.this);
                                 break;
-                            case R.id.action_about:
-                                dialog = dialogManager.createAboutDialog(MainActivity.this);
-                                break;
+//                            case R.id.action_about:
+//                                dialog = dialogManager.createAboutDialog(MainActivity.this);
+//                                break;
                         }
                         dialog.show();
                         return true;
