@@ -52,10 +52,12 @@ public class DialogManager {
 
     private final Application application;
     private final PrefManager prefManager;
+    private final AdManager adManager;
 
-    public DialogManager(WheelApplication application, PrefManager prefManager) {
+    public DialogManager(WheelApplication application, PrefManager prefManager, AdManager adManager) {
         this.application = application;
         this.prefManager = prefManager;
+        this.adManager = adManager;
     }
 
     public MaterialDialog createAboutDialog(Context context) {
@@ -225,7 +227,7 @@ public class DialogManager {
 
     public MaterialDialog createHistoryDialog(final Activity context) {
 
-        final RecyclerView responseListView;
+        final RecyclerView historyListView;
 
         final MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .autoDismiss(true)
@@ -242,8 +244,8 @@ public class DialogManager {
 
         final View view = dialog.getCustomView();
 
-        responseListView = (RecyclerView) view.findViewById(R.id.historyRecyclerView);
-        responseListView.setLayoutManager(new LinearLayoutManager(context));
+        historyListView = (RecyclerView) view.findViewById(R.id.historyRecyclerView);
+        historyListView.setLayoutManager(new LinearLayoutManager(context));
 
         final SlimAdapter slimAdapter = SlimAdapter.create()
                 .register(R.layout.history_item, new SlimInjector<HistoryItem>() {
@@ -255,9 +257,13 @@ public class DialogManager {
                                 .textColor(R.id.metadata, R.color.primary_light)
                                 .textSize(R.id.metadata, 12);
                     }
-                }).attachTo(responseListView);
+                }).attachTo(historyListView);
 
 
+        // TODO: make async.
+
+        List<HistoryItem> historyItems = topic
+        slimAdapter.updateData(historyItems);
         return dialog;
     }
 

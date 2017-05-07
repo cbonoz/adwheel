@@ -41,14 +41,16 @@ public class WheelModule {
 
     @Provides
     @Singleton
-    AdManager providesAdTopicManager(PrefManager prefManager) {
-        return new AdManager(prefManager);
+    AdManager providesAdTopicManager(PrefManager prefManager, Gson gson) {
+        return new AdManager(prefManager, gson);
     }
 
     @Provides
     @Singleton
-    DialogManager provideDialogManager(WheelApplication application, PrefManager prefManager) {
-        return new DialogManager(application, prefManager);
+    DialogManager provideDialogManager(WheelApplication application,
+                                       PrefManager prefManager,
+                                       AdManager adManager) {
+        return new DialogManager(application, prefManager, adManager);
     }
 
 }

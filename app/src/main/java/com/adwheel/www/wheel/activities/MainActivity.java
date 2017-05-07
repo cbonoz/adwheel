@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     @Inject
     PrefManager prefManager;
     @Inject
-    AdManager topicManager;
+    AdManager adManager;
 
     @BindView(R.id.luckyWheel)
     LuckyWheelView luckyWheelView;
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
         ButterKnife.bind(this);
 
-        topics = topicManager.getExampleTopics();
+        topics = adManager.getExampleTopics();
 
         // Use an activity context to get the rewarded video instance.
         mAd = MobileAds.getRewardedVideoAdInstance(this);
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     }
 
     public void loadVideoAdWithTopics(List<String> topics) {
-        AdRequest.Builder adRequestBuilder = topicManager.createAdBuilderFromPrefs();
+        AdRequest.Builder adRequestBuilder = adManager.createAdBuilderFromPrefs();
         for (String topic : topics) {
             adRequestBuilder = adRequestBuilder.addKeyword(topic);
         }
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
             // Add back in for deployment.
             // mAd.show();
             // TODO: save ad viewing to history.
-            topicManager.saveTopicString(topicString);
+            adManager.saveTopicString(topicString);
         } else {
             final String message = "Video not loaded yet";
             makeToast(message);
