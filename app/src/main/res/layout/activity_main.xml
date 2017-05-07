@@ -9,8 +9,8 @@
     android:layout_height="match_parent"
     tools:context="com.adwheel.www.wheel.activities.MainActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <ImageButton
+        android:id="@+id/logoButton"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_gravity="center|top"

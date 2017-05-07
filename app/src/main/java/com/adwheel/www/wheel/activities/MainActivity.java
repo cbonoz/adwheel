@@ -72,15 +72,20 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     @BindView(R.id.bottomNavigation)
     BottomNavigationView bottomNavigationView;
 
+    @OnClick(R.id.logoButton) void onLogoClick() {
+        // Show info dialog when the header image is clicked.
+        dialogManager.createAboutDialog(MainActivity.this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
+            // Hide the top bar dynamically if present.
             bar.hide();
         }
-
 
         WheelApplication.getInjectionComponent().inject(this);
 
@@ -119,6 +124,9 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                                 break;
                             case R.id.action_settings:
                                 dialog = dialogManager.createSettingsDialog(MainActivity.this);
+                                break;
+                            case R.id.action_history:
+                                dialog = dialogManager.createHistoryDialog(MainActivity.this);
                                 break;
                             case R.id.action_about:
                                 dialog = dialogManager.createAboutDialog(MainActivity.this);
@@ -217,20 +225,5 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-//    @Subscribe
-//    public void onEvent(LoadResponseHistoryCompleteEvent event) {
-//        Log.d(TAG, "onEvent - " + event.getClass().getSimpleName());
-//        loadingSpinner.setVisibility(View.GONE);
-//        responses = event.getResponses();
-//        questionManager.setResponses(responses);
-//        if (event.isSuccess()) {
-//            Log.d(TAG, "Success: " + responses.size() + " responses: " + responses.toArray());
-//            slimAdapter.updateData(responses);
-//            // TODO: add response visualizations in app for each response type.
-//            // renderChartViewForResponseList(responses, "Bar Chart 1");
-//        } else {
-//            Toast.makeText(this, R.string.connection_error, Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
 }

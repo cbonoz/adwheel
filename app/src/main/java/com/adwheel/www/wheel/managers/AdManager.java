@@ -69,16 +69,16 @@ public class AdManager {
             Log.e(TAG, e.toString());
         }
 
-        boolean isMale = prefManager.getBoolean(GENDER_LOC, true);
+        String genderConstant = prefManager.getString(GENDER_LOC, MALE);
         // use male as the default.
-        builder = builder.setGender(isMale ? 1 : 2);
+        builder = builder.setGender(genderConstant.equals(MALE) ? 1 : 2);
 
         builder = builder.setIsDesignedForFamilies(prefManager.getBoolean(FAMILY_LOC, false));
 
         return builder;
     }
 
-    public List<HistoryItem> loadTopics() {
+    public List<HistoryItem> getTopicHistory() {
         final long count = prefManager.getLong(HISTORY_COUNT_LOC, 0);
         String saveLoc;
         for (int i = historyItems.size(); i < count; i++) {
@@ -90,6 +90,8 @@ public class AdManager {
                 Log.e(TAG, e.toString());
             }
         }
+
+        Log.d(TAG, "History Items and Count should be equal: " + historyItems + ", " + count);
 
         return historyItems;
     }

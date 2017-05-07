@@ -233,11 +233,11 @@ public class DialogManager {
                 .autoDismiss(true)
                 .title(R.string.history_title)
                 .customView(R.layout.history_dialog, false)
-                .positiveText(R.string.save)
+                .positiveText(R.string.done)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        Toast.makeText(context, "preferences saved", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "done viewing history");
                     }
                 })
                 .build();
@@ -261,8 +261,7 @@ public class DialogManager {
 
 
         // TODO: make async.
-
-        List<HistoryItem> historyItems = topic
+        List<HistoryItem> historyItems = adManager.getTopicHistory();
         slimAdapter.updateData(historyItems);
         return dialog;
     }
