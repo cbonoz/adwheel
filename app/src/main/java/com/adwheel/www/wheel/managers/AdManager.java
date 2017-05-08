@@ -3,6 +3,7 @@ package com.adwheel.www.wheel.managers;
 import android.util.Log;
 
 import com.adwheel.www.wheel.models.HistoryItem;
+import com.adwheel.www.wheel.models.WheelTopics;
 import com.google.android.gms.ads.AdRequest;
 import com.google.gson.Gson;
 
@@ -17,6 +18,8 @@ public class AdManager {
     private final PrefManager prefManager;
     private final Gson gson;
 
+    public static final String WHEEL_LOC = "wheel_options";
+
     public static final String GENDER_LOC = "gender";
     public static final String BIRTH_YEAR_LOC = "birthyear";
     public static final String TOPIC_LOC = "topics";
@@ -26,24 +29,19 @@ public class AdManager {
     public static final String HISTORY_COUNT_LOC = "count";
 
     public static final int DEFAULT_BIRTH_YEAR = 2000;
-
-    public static final String MALE = "Male";
-    public static final String FEMALE = "Female";
-    public static final String NEUTRAL = "Neutral";
+//
+//    public static final String MALE = "Male";
+//    public static final String FEMALE = "Female";
+//    public static final String NEUTRAL = "Neutral";
 
     private List<HistoryItem> historyItems;
-
 
     private static final List<String> EXAMPLE_TOPICS = Arrays.asList(
             "technology",
             "games",
             "clothing",
-            "television",
             "sports",
-            "hygiene",
             "food",
-            "science",
-            "apps",
             "politics"
     );
 
@@ -53,25 +51,29 @@ public class AdManager {
         this.historyItems = new ArrayList<>();
     }
 
-    public List<String> getExampleTopics() {
-        return EXAMPLE_TOPICS;
+    private WheelTopics getDefaultWheelTopics() {
+        return new WheelTopics(EXAMPLE_TOPICS);
     }
 
     public AdRequest.Builder createAdBuilderFromPrefs() {
-        AdRequest.Builder builder = new AdRequest.Builder();
+        AdRequest.Builder builder = new AdRequest.Builder()
+                .addTestDevice("24FC531E1163DBB1DF67674F1882463C");
 
         try {
             Date birthday = new Date();
             // TODO: just using birth year as the dominant factor.
-            birthday.setYear((int) prefManager.getLong(BIRTH_YEAR_LOC, 2000));
+            birthday.setYear(prefManager.getInt(BIRTH_YEAR_LOC, DEFAULT_BIRTH_YEAR));
             builder = builder.setBirthday(birthday);
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
 
-        String genderConstant = prefManager.getString(GENDER_LOC, MALE);
-        // use male as the default.
-        builder = builder.setGender(genderConstant.equals(MALE) ? 1 : 2);
+        final int gender = prefManager.getInt(GENDER_LOC, -1);
+        if (gender != -1) {
+            // use male as the default.
+            Log.d(TAG, "gender ordinal: " + gender);
+            builder = builder.setGender(gender);
+        }
 
         builder = builder.setIsDesignedForFamilies(prefManager.getBoolean(FAMILY_LOC, false));
 
@@ -97,10 +99,10 @@ public class AdManager {
     }
 
     private void incrementHistoryCount(long count) {
-        prefManager.saveLong(HISTORY_COUNT_LOC, count+1);
+        prefManager.saveLong(HISTORY_COUNT_LOC, count + 1);
     }
 
-    public void saveTopicString(String topicString) {
+    public void saveTopicStringToHistory(String topicString) {
         final long timestamp = System.currentTimeMillis();
         final long count = prefManager.getLong(HISTORY_COUNT_LOC, 0);
         final String saveLoc = HISTORY_LOC + count;
@@ -108,5 +110,21 @@ public class AdManager {
         final HistoryItem item = new HistoryItem(timestamp, topicString);
         prefManager.saveString(saveLoc, gson.toJson(item));
         incrementHistoryCount(count);
+    }
+
+    public void saveWheelTopics(WheelTopics wheelTopics) {
+        prefManager.saveJsonPreference(WHEEL_LOC, wheelTopics);
+    }
+
+    public WheelTopics getWheelTopics() {
+        WheelTopics wheelTopics = prefManager.getJsonPreference(WHEEL_LOC, WheelTopics.class, getDefaultWheelTopics());
+
+        // Validation of returned topics.
+        int numTopics = wheelTopics.topics.size();
+        if (numTopics < 2 || numTopics > DialogManager.MAX_OPTIONS) {
+            return getDefaultWheelTopics();
+        } else {
+            return wheelTopics;
+        }
     }
 }

@@ -22,20 +22,22 @@
         android:layout_height="60dp"
         android:orientation="horizontal">
 
-        <View
-            android:layout_weight=".5"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-
         <Button
             android:id="@+id/addOptionButton"
             android:background="@color/accent"
+            android:textColor="@color/md_white_1000"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_margin="15dp"
             android:layout_marginStart="20dp"
             android:layout_weight=".5"
-            android:text="Add New Option" />
+            android:text="ADD TOPIC" />
+
+        <View
+            android:layout_weight=".5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
 
     </LinearLayout>
 

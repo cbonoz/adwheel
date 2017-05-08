@@ -35,8 +35,8 @@ public class WheelModule {
 
     @Provides
     @Singleton
-    PrefManager providesPrefManager(WheelApplication app) {
-        return new PrefManager(app);
+    PrefManager providesPrefManager(WheelApplication app, Gson gson) {
+        return new PrefManager(app, gson);
     }
 
     @Provides

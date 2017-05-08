@@ -28,8 +28,8 @@
             android:name=".services.WebService"
             android:exported="false" />
 
+        <!--android:screenOrientation="portrait"-->
         <activity android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"/>
     </application>
 

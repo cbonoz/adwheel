@@ -10,11 +10,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.adwheel.www.wheel.BuildConfig;
 import com.adwheel.www.wheel.R;
 import com.adwheel.www.wheel.WheelApplication;
 import com.adwheel.www.wheel.managers.AdManager;
 import com.adwheel.www.wheel.managers.DialogManager;
 import com.adwheel.www.wheel.managers.PrefManager;
+import com.adwheel.www.wheel.models.WheelTopics;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
@@ -44,8 +46,9 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
     private RewardedVideoAd mAd;
 
-    private List<LuckyItem> data = null;
-    private List<String> topics;
+    private List<LuckyItem> data = new ArrayList<>();
+
+    private WheelTopics currentWheelTopics;
 
     private boolean isRunning = false;
 
@@ -59,22 +62,35 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     @BindView(R.id.luckyWheel)
     LuckyWheelView luckyWheelView;
 
-    @OnClick(R.id.luckyWheel)
+    @OnClick(R.id.spinButton)
     void onWheelClick() {
         if (!isRunning) {
             int index = getRandomIndex(data);
             String loadedTopic = data.get(index).topicString;
             loadVideoAdWithTopics(Arrays.asList(loadedTopic));
             luckyWheelView.startLuckyWheelWithTargetIndex(index);
+            isRunning = true;
         }
     }
 
     @BindView(R.id.bottomNavigation)
     BottomNavigationView bottomNavigationView;
 
-    @OnClick(R.id.logoButton) void onLogoClick() {
+    // Open the info dialog
+    @OnClick(R.id.logoButton)
+    void onLogoClick() {
         // Show info dialog when the header image is clicked.
-        dialogManager.createAboutDialog(MainActivity.this);
+        Log.d(TAG, "onLogoClick");
+        MaterialDialog dialog = dialogManager.createAboutDialog(MainActivity.this);
+        dialog.show();
+    }
+
+    // Change the options on the wheel dialog.
+    @OnClick(R.id.changeWheelButton)
+    void onWheelButtonClick() {
+        Log.d(TAG, "onWheelButtonClick");
+        MaterialDialog dialog = dialogManager.createWheelTopicsDialog(MainActivity.this);
+        dialog.show();
     }
 
     @Override
@@ -88,19 +104,17 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         }
 
         WheelApplication.getInjectionComponent().inject(this);
-
         ButterKnife.bind(this);
 
-        topics = adManager.getExampleTopics();
+        currentWheelTopics = adManager.getWheelTopics();
 
         // Use an activity context to get the rewarded video instance.
+        MobileAds.initialize(this, getString(R.string.ad_app_id));
         mAd = MobileAds.getRewardedVideoAdInstance(this);
         mAd.setRewardedVideoAdListener(this);
 
         loadLuckyWheelData();
 
-        luckyWheelView.setData(data);
-        luckyWheelView.bringToFront();
         luckyWheelView.setRound(getRandomNumberOfRotations());
 
         luckyWheelView.setLuckyRoundItemSelectedListener(new LuckyWheelView.LuckyRoundItemSelectedListener() {
@@ -128,17 +142,18 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                             case R.id.action_history:
                                 dialog = dialogManager.createHistoryDialog(MainActivity.this);
                                 break;
-//                            case R.id.action_about:
-//                                dialog = dialogManager.createAboutDialog(MainActivity.this);
-//                                break;
                         }
                         dialog.show();
                         return true;
                     }
                 });
+
+
+        luckyWheelView.bringToFront();
     }
 
     public void loadVideoAdWithTopics(List<String> topics) {
+        Log.d(TAG, "loadVideo with topics: " + topics.toString());
         AdRequest.Builder adRequestBuilder = adManager.createAdBuilderFromPrefs();
         for (String topic : topics) {
             adRequestBuilder = adRequestBuilder.addKeyword(topic);
@@ -146,12 +161,12 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         final AdRequest adRequest = adRequestBuilder.build();
         String topicString = TextUtils.join(", ", adRequest.getKeywords());
         Log.d(TAG, "Loading ad topics: " + topicString);
-        // mAd.loadAd(getString(R.string.ad_unit_id), adRequest);
+        mAd.loadAd(getString(R.string.test_ad_unit_id), adRequest);
     }
 
     private void loadLuckyWheelData() {
-        final int numTopics = topics.size();
-        data = new ArrayList<>();
+        final int numTopics = currentWheelTopics.topics.size();
+        data.clear();
         for (int i = 0; i < numTopics; i++) {
             LuckyItem luckyItem = new LuckyItem();
             if (i % 2 == 0) {
@@ -161,25 +176,33 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
             } else {
                 luckyItem.color = 0xffB39DDB;
             }
-            luckyItem.text = topics.get(i);
-            luckyItem.icon = R.drawable.star_icon;
+            luckyItem.text = currentWheelTopics.topics.get(i);
+            luckyItem.icon = R.drawable.star_24;
+            luckyItem.topicString = currentWheelTopics.topics.get(i);
             data.add(luckyItem);
         }
+        luckyWheelView.setData(data);
         Log.d(TAG, "data: " + data);
     }
 
     private void showVideoAd(String topicString) {
-        makeToast("showVideoAd");
-        if (mAd.isLoaded()) {
+        makeToast("showVideoAd: " + topicString);
+        if (BuildConfig.DEBUG || mAd.isLoaded()) {
             // Add back in for deployment.
-            // mAd.show();
+            mAd.show();
             // TODO: save ad viewing to history.
-            adManager.saveTopicString(topicString);
+            adManager.saveTopicStringToHistory(topicString);
         } else {
             final String message = "Video not loaded yet";
             makeToast(message);
             Log.e(TAG, message);
         }
+    }
+
+    public void updateWheelTopics(WheelTopics wheelTopics) {
+        Log.d(TAG, "updateWheelTopics");
+        currentWheelTopics = wheelTopics;
+        loadLuckyWheelData();
     }
 
     private void makeToast(String message) {
@@ -213,6 +236,10 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     @Override
     public void onRewardedVideoAdLoaded() {
         Toast.makeText(this, "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
+        if (!isRunning) {
+            Log.d(TAG, "show on load since spinner not rotating");
+            mAd.show();
+        }
     }
 
     @Override

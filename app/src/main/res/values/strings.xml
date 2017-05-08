@@ -17,9 +17,14 @@
     <!--<string name="profile_desc_text"><b>Here are your listening counts for this device. These counts appear on the animal leaderboards:</b></string>-->
     <string name="profile_desc_text">Your LeaderBoard Scores:</string>
 
-    <string name="ad_app_id"> ca-app-pub-5780102660170607~3225694773</string>
-    <string name="ad_unit_id">ca-app-pub-5780102660170607/1688255977</string>
-    <string name="banner_ad_unit_id">ca-app-pub-5780102660170607/4702427976</string>
+    <string name="ad_app_id">ca-app-pub-5780102660170607~8350238373</string>
+    <string name="video_ad_unit_id">ca-app-pub-5780102660170607/6733904373</string>
+    <!--TODO: Change this, For Testing ONLY-->
+    <string name="test_ad_unit_id">ca-app-pub-3940256099942544/5224354917</string>
+
+    <string name="video_play_after_spin">Video will play once spin completes.</string>
+
+    <!--<string name="banner_ad_unit_id">ca-app-pub-5780102660170607/4702427976</string>-->
 
     <!--Error text-->
     <string name="internet_error">Could not connect to Internet service</string>
@@ -38,6 +43,7 @@
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
     <string name="save">Save</string>
+    <string name="clear_history">Clear History</string>
     <string name="save_and_play">Save and Play</string>
 
     <string name="male">Male</string>
@@ -47,7 +53,8 @@
     <string name="settings_title">Settings</string>
     <string name="search_title">Generate an ad based on keywords</string>
     <string name="about_title">About</string>
-    <string name="history_title">Your Topic History</string>
+    <string name="history_title">Your History</string>
+    <string name="wheel_title">Configure your random topics for the wheel.</string>
 
 
 </resources>

@@ -1,36 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/primary_text"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primary_text"
+    android:orientation="vertical"
     tools:context="com.adwheel.www.wheel.activities.MainActivity">
 
-    <ImageButton
-        android:id="@+id/logoButton"
-        android:background="@null"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_gravity="center|top"
-        android:src="@drawable/adwheel_logo" />
-
-
     <FrameLayout
-        android:layout_marginTop="25dp"
-        android:paddingTop="40dp"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/logoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center|top"
+            android:background="@null"
+            android:contentDescription="App Information"
+            android:src="@drawable/adwheel_logo" />
+
+        <ImageButton
+            android:id="@+id/changeWheelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_margin="5dp"
+            android:contentDescription="Change wheel options"
+            android:src="@drawable/zzz_information" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:layout_weight="1">
 
         <!--app:lkwBackgroundColor="#FF9800"-->
         <rubikstudio.library.LuckyWheelView
             android:id="@+id/luckyWheel"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             app:lkwBackgroundColor="#FF9800"
@@ -38,40 +54,53 @@
             app:lkwCursor="@drawable/ic_cursor"
             app:lkwTextColor="#263238" />
 
-    </FrameLayout>
+
+    </LinearLayout>
 
     <TextView
-        android:text="@string/click_to_spin"
-        android:textSize="20sp"
-        android:textColor="@color/md_white_1000"
-        android:textStyle="bold"
-        android:layout_gravity="center|bottom"
-        android:layout_width="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/video_play_after_spin"
         android:textAlignment="center"
-        android:layout_height="40dp"/>
+        android:textColor="@color/md_deep_purple_100" />
+
+    <Button
+        android:id="@+id/spinButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="20dp"
+        android:background="#FF9800"
+        android:padding="10dp"
+        android:text="@string/click_to_spin"
+        android:textAlignment="center"
+        android:textColor="@color/md_white_1000"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/play"
-        android:textSize="16sp"
-        android:textColor="@color/md_white_1000"
-        android:text="SPIN THE WHEEL"
-        android:visibility="gone"
-        android:textStyle="bold"
-        android:background="@color/primary_dark"
+        android:layout_width="200dp"
+        android:layout_height="36dp"
         android:layout_gravity="center|bottom"
         android:layout_margin="20dp"
-        android:layout_width="200dp"
-        android:layout_height="36dp" />
+        android:background="@color/primary_dark"
+        android:text="SPIN THE WHEEL"
+        android:textColor="@color/md_white_1000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         app:itemBackground="@color/primary_dark"
         app:itemIconTint="@color/md_purple_50"
-        android:layout_gravity="bottom"
         app:itemTextColor="@color/md_white_1000"
         app:menu="@menu/bottom_navigation_main" />
 
