@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                 return "Can\'t load ads right now, perhaps internet? Try again later";
             case 3:
             default:
-               return "I could not find a video with those topics";
+               return "I could not find a video, perhaps change your settings?";
         }
     }
 }

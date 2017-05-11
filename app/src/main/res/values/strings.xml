@@ -51,6 +51,8 @@
     <string name="female">Female</string>
     <string name="neutral">Neutral</string>
 
+    <string name="family_text_desc">Note that leaving this setting off generally yields more results.</string>
+
     <string name="settings_title">Settings</string>
     <string name="search_title">Generate an ad based on keywords</string>
     <string name="about_title">About</string>
