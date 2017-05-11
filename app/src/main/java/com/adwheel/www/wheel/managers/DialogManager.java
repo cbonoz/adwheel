@@ -28,6 +28,8 @@ import com.adwheel.www.wheel.models.HistoryItem;
 import com.adwheel.www.wheel.models.TopicsHolder;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.MaterialDialog.Builder;
+import com.afollestad.materialdialogs.MaterialDialog.SingleButtonCallback;
 import com.afollestad.materialdialogs.Theme;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.ads.AdRequest;
@@ -283,16 +285,25 @@ public class DialogManager {
 
         final RecyclerView historyListView;
 
-        final MaterialDialog dialog = new MaterialDialog.Builder(context)
+        final MaterialDialog dialog = new Builder(context)
                 .autoDismiss(true)
                 .title(R.string.history_title)
                 .theme(Theme.LIGHT)
                 .customView(R.layout.history_dialog, false)
                 .positiveText(R.string.done)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                .onPositive(new SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         Log.d(TAG, "done viewing history");
+                    }
+                })
+                .negativeText(R.string.clear_history)
+                .onNegative(new SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        adManager.clearHistory();
+                        Toast.makeText(context, "history erased", Toast.LENGTH_SHORT).show();
+
                     }
                 })
                 .build();

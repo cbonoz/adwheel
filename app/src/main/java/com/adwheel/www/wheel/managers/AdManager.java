@@ -112,6 +112,12 @@ public class AdManager {
         incrementHistoryCount(count);
     }
 
+    public void clearHistory() {
+        final long timestamp = System.currentTimeMillis();
+        prefManager.saveLong(HISTORY_COUNT_LOC, 0);
+        historyItems.clear();
+    }
+
     private static final String[] loadingStrings = new String[]{
             "Preparing Content",
             "Your Wish is my Command",
@@ -133,7 +139,7 @@ public class AdManager {
     }
 
     public TopicsHolder getTopicsHolder(String location) {
-        TopicsHolder defaultHolder = location.equals(WHEEL_TOPIC_LOC) ? getDefaultWheelTopics() : new TopicsHolder();
+        TopicsHolder defaultHolder = location.equals(WHEEL_TOPIC_LOC) ? getDefaultWheelTopics() : new TopicsHolder(Arrays.asList("politics"));
         final TopicsHolder topicsHolder = prefManager.getJsonPreference(location, TopicsHolder.class, defaultHolder);
 
         // Validation of returned topics.

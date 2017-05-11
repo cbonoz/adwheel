@@ -17,6 +17,9 @@ import com.adwheel.www.wheel.R;
 import java.util.List;
 
 public class MyTopicAdapter extends BaseAdapter {
+
+    private static final int MIN_LENGTH = 2;
+
     private final Activity activity;
     private final View optionView;
     private final List<String> myOptions;
@@ -59,7 +62,7 @@ public class MyTopicAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View view) {
-                if (myOptions.size() > 1) {
+                if (myOptions.size() > MIN_LENGTH) {
                     myOptions.remove(position);
                     Log.d("GCM", "Item removed from position: " + position);
                     notifyDataSetChanged();
