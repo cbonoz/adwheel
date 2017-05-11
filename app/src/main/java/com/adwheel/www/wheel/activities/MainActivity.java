@@ -16,7 +16,7 @@ import com.adwheel.www.wheel.WheelApplication;
 import com.adwheel.www.wheel.managers.AdManager;
 import com.adwheel.www.wheel.managers.DialogManager;
 import com.adwheel.www.wheel.managers.PrefManager;
-import com.adwheel.www.wheel.models.WheelTopics;
+import com.adwheel.www.wheel.models.TopicsHolder;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
     private List<LuckyItem> data = new ArrayList<>();
 
-    private WheelTopics currentWheelTopics;
+    private TopicsHolder currentTopicsHolder;
 
     private boolean isRunning = false;
 
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         WheelApplication.getInjectionComponent().inject(this);
         ButterKnife.bind(this);
 
-        currentWheelTopics = adManager.getWheelTopics();
+        currentTopicsHolder = adManager.getTopicsHolder(AdManager.WHEEL_TOPIC_LOC);
 
         // Use an activity context to get the rewarded video instance.
         MobileAds.initialize(this, getString(R.string.ad_app_id));
@@ -168,14 +168,14 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     private static final int[] wheelColors = new int[]{0xffEDE7F6, 0xffD1C4E9, 0xffB39DDB, 0xffD8BFD8};
 
     private void loadLuckyWheelData() {
-        final int numTopics = currentWheelTopics.topics.size();
+        final int numTopics = currentTopicsHolder.topics.size();
         data.clear();
         final int numColors = wheelColors.length;
         for (int i = 0; i < numTopics; i++) {
             LuckyItem luckyItem = new LuckyItem();
             luckyItem.color = wheelColors[i % numColors];
-            luckyItem.text = currentWheelTopics.topics.get(i);
-            luckyItem.topicString = currentWheelTopics.topics.get(i);
+            luckyItem.text = currentTopicsHolder.topics.get(i);
+            luckyItem.topicString = currentTopicsHolder.topics.get(i);
             luckyItem.icon = R.drawable.star_24;
 
             data.add(luckyItem);
@@ -198,9 +198,9 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         }
     }
 
-    public void updateWheelTopics(WheelTopics wheelTopics) {
+    public void updateWheelTopics(TopicsHolder topicsHolder) {
         Log.d(TAG, "updateWheelTopics");
-        currentWheelTopics = wheelTopics;
+        currentTopicsHolder = topicsHolder;
         loadLuckyWheelData();
     }
 
@@ -212,6 +212,14 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                 .show();
     }
 
+    private void attemptLoadingDialogDismiss() {
+        try {
+            loadingDialog.dismiss();
+        } catch (Exception e) {
+            Log.e(TAG, "loadingDialog already dismissed");
+        }
+    }
+
     private void makeToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
@@ -220,48 +228,56 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
     @Override
     public void onRewarded(RewardItem reward) {
-        Toast.makeText(this, "onRewarded! currency: " + reward.getType() + "  amount: " +
-                reward.getAmount(), Toast.LENGTH_SHORT).show();
+        final String rewardMessage = "onRewarded! currency: " + reward.getType() + "  amount: " + reward.getAmount();
+        Log.d(TAG, "Reward: " + rewardMessage);
     }
 
     @Override
     public void onRewardedVideoAdLeftApplication() {
-        Toast.makeText(this, "onRewardedVideoAdLeftApplication",
-                Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onRewardedVideoAdLeftApplication");
     }
 
     @Override
     public void onRewardedVideoAdClosed() {
-        Toast.makeText(this, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onRewardedVideoAdClosed");
     }
 
     @Override
     public void onRewardedVideoAdFailedToLoad(int errorCode) {
-        Toast.makeText(this, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
+        makeToast(getMessageFromErrorCode(errorCode));
+        attemptLoadingDialogDismiss();
         Log.e(TAG, "Video load failed, errorCode: " + errorCode);
     }
 
     @Override
     public void onRewardedVideoAdLoaded() {
-        Toast.makeText(this, "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onRewardedVideoAdLoaded");
         if (!isRunning) {
             Log.d(TAG, "show on load since spinner not rotating");
-            try {
-                loadingDialog.dismiss();
-            } catch (Exception e) {
-                Log.e(TAG, "loadingDialog already dismissed");
-            }
+            attemptLoadingDialogDismiss();
             mAd.show();
         }
     }
 
     @Override
     public void onRewardedVideoAdOpened() {
-        Toast.makeText(this, "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onRewardedVideoOpened");
     }
 
     @Override
     public void onRewardedVideoStarted() {
-        Toast.makeText(this, "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
+        // makeToast("Playing Video");
+        Log.d(TAG, "onRewardedVideoStarted");
+    }
+
+    private String getMessageFromErrorCode(final int errorCode) {
+        switch ( errorCode ) {
+            case 0:
+                return "Can\'t load ads right now, perhaps internet? Try again later"
+            case 3:
+            default:
+               return "I could not find a video with those topics";
+        }
     }
 }

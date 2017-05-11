@@ -3,7 +3,7 @@ package com.adwheel.www.wheel.managers;
 import android.util.Log;
 
 import com.adwheel.www.wheel.models.HistoryItem;
-import com.adwheel.www.wheel.models.WheelTopics;
+import com.adwheel.www.wheel.models.TopicsHolder;
 import com.google.android.gms.ads.AdRequest;
 import com.google.gson.Gson;
 
@@ -51,8 +51,8 @@ public class AdManager {
         this.historyItems = new ArrayList<>();
     }
 
-    private WheelTopics getDefaultWheelTopics() {
-        return new WheelTopics(EXAMPLE_TOPICS);
+    private TopicsHolder getDefaultWheelTopics() {
+        return new TopicsHolder(EXAMPLE_TOPICS);
     }
 
     public AdRequest.Builder createAdBuilderFromPrefs() {
@@ -126,22 +126,22 @@ public class AdManager {
         return loadingStrings[index] + "...";
     }
 
-
     // WHEEL Topic methods.
 
-    public void saveWheelTopics(WheelTopics wheelTopics) {
-        prefManager.saveJsonPreference(WHEEL_TOPIC_LOC, wheelTopics);
+    public void saveTopicsHolder(String location, TopicsHolder topicsHolder) {
+        prefManager.saveJsonPreference(location, topicsHolder);
     }
 
-    public WheelTopics getWheelTopics() {
-        WheelTopics wheelTopics = prefManager.getJsonPreference(WHEEL_TOPIC_LOC, WheelTopics.class, getDefaultWheelTopics());
+    public TopicsHolder getTopicsHolder(String location) {
+        TopicsHolder defaultHolder = location.equals(WHEEL_TOPIC_LOC) ? getDefaultWheelTopics() : new TopicsHolder();
+        final TopicsHolder topicsHolder = prefManager.getJsonPreference(location, TopicsHolder.class, defaultHolder);
 
         // Validation of returned topics.
-        int numTopics = wheelTopics.topics.size();
+        int numTopics = topicsHolder.topics.size();
         if (numTopics < 2 || numTopics > DialogManager.MAX_OPTIONS) {
             return getDefaultWheelTopics();
         } else {
-            return wheelTopics;
+            return topicsHolder;
         }
     }
 }

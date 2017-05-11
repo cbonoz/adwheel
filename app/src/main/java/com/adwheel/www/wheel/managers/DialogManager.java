@@ -25,7 +25,7 @@ import com.adwheel.www.wheel.WheelApplication;
 import com.adwheel.www.wheel.activities.MainActivity;
 import com.adwheel.www.wheel.adapters.MyTopicAdapter;
 import com.adwheel.www.wheel.models.HistoryItem;
-import com.adwheel.www.wheel.models.WheelTopics;
+import com.adwheel.www.wheel.models.TopicsHolder;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
@@ -221,15 +221,7 @@ public class DialogManager {
     }
 
     public MaterialDialog createSearchDialog(final MainActivity context) {
-        final List<String> myTopics = new ArrayList<>();
-
-        String topics = prefManager.getString(SEARCH_TOPIC_LOC, null);
-        if (topics != null) {
-            String[] topicsList = topics.split(",");
-            for (String topic : topicsList) {
-                myTopics.add(topic);
-            }
-        }
+        final List<String> myTopics = adManager.getTopicsHolder(SEARCH_TOPIC_LOC).topics;
 
         MaterialDialog searchTopicsDialog = new MaterialDialog.Builder(context)
                 .title(R.string.search_title)
@@ -239,9 +231,8 @@ public class DialogManager {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String topicString = TextUtils.join(",", myTopics);
-                        prefManager.saveString(SEARCH_TOPIC_LOC, topicString);
-                        Toast.makeText(context, "Loading ad: " + topicString, Toast.LENGTH_SHORT).show();
+                        adManager.saveTopicsHolder(SEARCH_TOPIC_LOC, new TopicsHolder(myTopics));
+                        Toast.makeText(context, "Loading ad: " + myTopics, Toast.LENGTH_SHORT).show();
                         context.loadVideoAdWithTopics(myTopics);
                         context.showLoadingDialog();
                     }
@@ -249,8 +240,7 @@ public class DialogManager {
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String topicString = TextUtils.join(",", myTopics);
-                        prefManager.saveString(SEARCH_TOPIC_LOC, topicString);
+                        adManager.saveTopicsHolder(SEARCH_TOPIC_LOC, new TopicsHolder(myTopics));
                         Toast.makeText(context, "saved topics", Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -351,7 +341,7 @@ public class DialogManager {
 
     public MaterialDialog createWheelTopicsDialog(final MainActivity context) {
         // Load the current wheel topics.
-        final List<String> myTopics = new ArrayList<>(adManager.getWheelTopics().topics);
+        final List<String> myTopics = new ArrayList<>(adManager.getTopicsHolder(WHEEL_TOPIC_LOC).topics);
 
         MaterialDialog wheelTopicsDialog = new MaterialDialog.Builder(context)
                 .title(R.string.wheel_title)
@@ -365,9 +355,9 @@ public class DialogManager {
                             Toast.makeText(context, "Must have at least 2 options", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        WheelTopics wheelTopics = new WheelTopics(myTopics);
-                        adManager.saveWheelTopics(wheelTopics);
-                        context.updateWheelTopics(wheelTopics);
+                        TopicsHolder topicsHolder = new TopicsHolder(myTopics);
+                        adManager.saveTopicsHolder(WHEEL_TOPIC_LOC, topicsHolder);
+                        context.updateWheelTopics(topicsHolder);
                         Log.d(TAG, "updated topics");
                         dialog.dismiss();
                     }
