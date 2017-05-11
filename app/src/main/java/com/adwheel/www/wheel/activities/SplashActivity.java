@@ -41,16 +41,16 @@ public class SplashActivity extends AwesomeSplash  {
         //Choose LOGO OR PATH; if you don't provide String value for path it's logo by default
 
         //Customize Logo
-        configSplash.setLogoSplash(R.drawable.wheel2); //or any other drawable
+        configSplash.setLogoSplash(R.drawable.ad_wheel_150); //or any other drawable
         configSplash.setAnimLogoSplashDuration(duration); //int ms
         configSplash.setAnimLogoSplashTechnique(Techniques.Bounce); //choose one form Techniques (ref: https://github.com/daimajia/AndroidViewAnimations)
 
         //Customize Title
-        configSplash.setTitleSplash(getString(R.string.app_name));
-        configSplash.setTitleTextColor(R.color.md_amber_700);
-        configSplash.setTitleTextSize(30f); //float value
+        configSplash.setTitleSplash(getString(R.string.slogan));
+        configSplash.setTitleTextColor(R.color.md_deep_purple_100);
+        configSplash.setTitleTextSize(18f); //float value
         configSplash.setAnimTitleDuration(duration);
-        configSplash.setAnimTitleTechnique(Techniques.FlipInX);
+        configSplash.setAnimTitleTechnique(Techniques.FadeIn);
         // configSplash.setTitleFont("fonts/myfont.ttf"); //provide string to your font located in assets/fonts/
 
     }

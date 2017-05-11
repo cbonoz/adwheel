@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Ad Wheel</string>
+    <string name="slogan">You control the ads</string>
     <string name="title_activity_splash">SplashActivity</string>
 
     <string name="action_settings">Settings</string>
     <string name="about_file">file:///android_asset/about.html</string>
 
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading</string>
 
     <string name="twitter_line">Find Random Animals on Google Play - listen to sounds and get on the leaderboard</string>
 

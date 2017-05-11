@@ -11,18 +11,26 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/logoButton"
+        <FrameLayout
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginBottom="10dp"
-            android:layout_gravity="center|top"
-            android:background="@null"
-            android:contentDescription="App Information"
-            android:src="@drawable/adwheel_logo" />
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/logoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center|top"
+                android:background="@null"
+                android:contentDescription="App Information"
+                android:src="@drawable/adwheel_logo" />
+
+
+        </FrameLayout>
+
 
         <ImageButton
             android:id="@+id/changeWheelButton"
@@ -32,6 +40,7 @@
             android:layout_margin="5dp"
             android:contentDescription="Change wheel options"
             android:src="@drawable/zzz_information" />
+
     </FrameLayout>
 
     <LinearLayout

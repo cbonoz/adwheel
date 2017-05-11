@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class AdManager {
     private static final String TAG = AdManager.class.getSimpleName();
@@ -18,11 +19,10 @@ public class AdManager {
     private final PrefManager prefManager;
     private final Gson gson;
 
-    public static final String WHEEL_LOC = "wheel_options";
-
     public static final String GENDER_LOC = "gender";
     public static final String BIRTH_YEAR_LOC = "birthyear";
-    public static final String TOPIC_LOC = "topics";
+    public static final String SEARCH_TOPIC_LOC = "search_topics";
+    public static final String WHEEL_TOPIC_LOC = "search_topics";
     public static final String FAMILY_LOC = "family";
 
     public static final String HISTORY_LOC = "history";
@@ -112,12 +112,29 @@ public class AdManager {
         incrementHistoryCount(count);
     }
 
+    private static final String[] loadingStrings = new String[]{
+            "Preparing Content",
+            "Your Wish is my Command",
+            "Checking ads on other planets",
+            "Browsing the internet",
+            "Getting popcorn"
+    };
+
+    public String getRandomLoadingText() {
+        Random rand = new Random();
+        final int index = rand.nextInt(loadingStrings.length);
+        return loadingStrings[index] + "...";
+    }
+
+
+    // WHEEL Topic methods.
+
     public void saveWheelTopics(WheelTopics wheelTopics) {
-        prefManager.saveJsonPreference(WHEEL_LOC, wheelTopics);
+        prefManager.saveJsonPreference(WHEEL_TOPIC_LOC, wheelTopics);
     }
 
     public WheelTopics getWheelTopics() {
-        WheelTopics wheelTopics = prefManager.getJsonPreference(WHEEL_LOC, WheelTopics.class, getDefaultWheelTopics());
+        WheelTopics wheelTopics = prefManager.getJsonPreference(WHEEL_TOPIC_LOC, WheelTopics.class, getDefaultWheelTopics());
 
         // Validation of returned topics.
         int numTopics = wheelTopics.topics.size();

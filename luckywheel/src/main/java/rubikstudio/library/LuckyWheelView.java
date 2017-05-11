@@ -121,15 +121,15 @@ public class LuckyWheelView extends RelativeLayout implements PielView.PieRotate
     }
 
     // TODO: Verify this produces maximal square in the view.
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int width = getMeasuredWidth();
-        int height = getMeasuredHeight();
-        int squareLen = width;
-        if (height > width) {
-            squareLen = height;
-        }
-        super.onMeasure(MeasureSpec.makeMeasureSpec(squareLen, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(squareLen, MeasureSpec.EXACTLY));
-    }
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//        int width = getMeasuredWidth();
+//        int height = getMeasuredHeight();
+//        int squareLen = width;
+//        if (height > width) {
+//            squareLen = height;
+//        }
+//        super.onMeasure(MeasureSpec.makeMeasureSpec(squareLen, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(squareLen, MeasureSpec.EXACTLY));
+//    }
 
 }

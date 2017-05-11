@@ -25,6 +25,9 @@ import rubikstudio.library.model.LuckyItem;
  */
 
 public class PielView extends View {
+
+    private static final int MIN_DRAWABLE_SCALE_FACTOR = 6;
+
     private RectF mRange = new RectF();
     private int mRadius;
 
@@ -167,7 +170,9 @@ public class PielView extends View {
      * @param bitmap
      */
     private void drawImage(Canvas canvas, float tmpAngle, Bitmap bitmap) {
-        int imgWidth = mRadius / mLuckyItemList.size();
+        // Added min scale factor of 5.
+        final int imageScaleFactor = Math.max(mLuckyItemList.size(), MIN_DRAWABLE_SCALE_FACTOR);
+        int imgWidth = mRadius / imageScaleFactor;
 
         float angle = (float) ((tmpAngle + 360 / mLuckyItemList.size() / 2) * Math.PI / 180);
 

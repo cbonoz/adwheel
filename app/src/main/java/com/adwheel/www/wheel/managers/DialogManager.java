@@ -28,6 +28,7 @@ import com.adwheel.www.wheel.models.HistoryItem;
 import com.adwheel.www.wheel.models.WheelTopics;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.ads.AdRequest;
 
@@ -47,12 +48,14 @@ import static com.adwheel.www.wheel.managers.AdManager.BIRTH_YEAR_LOC;
 import static com.adwheel.www.wheel.managers.AdManager.DEFAULT_BIRTH_YEAR;
 import static com.adwheel.www.wheel.managers.AdManager.FAMILY_LOC;
 import static com.adwheel.www.wheel.managers.AdManager.GENDER_LOC;
-import static com.adwheel.www.wheel.managers.AdManager.TOPIC_LOC;
+import static com.adwheel.www.wheel.managers.AdManager.SEARCH_TOPIC_LOC;
+import static com.adwheel.www.wheel.managers.AdManager.WHEEL_TOPIC_LOC;
 import static com.google.android.gms.internal.zzt.TAG;
 
 public class DialogManager {
 
     public static final int MAX_OPTIONS = 10;
+    public static final String DEFAULT_TOPIC = "technology";
 
     private final Application application;
     private final PrefManager prefManager;
@@ -95,6 +98,7 @@ public class DialogManager {
         final RadioGroup genderGroup;
         final DiscreteSeekBar yearSeekBar;
         final Switch familySwitch;
+
         final MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .autoDismiss(true)
                 .title(R.string.settings_title)
@@ -219,7 +223,7 @@ public class DialogManager {
     public MaterialDialog createSearchDialog(final MainActivity context) {
         final List<String> myTopics = new ArrayList<>();
 
-        String topics = prefManager.getString(TOPIC_LOC, null);
+        String topics = prefManager.getString(SEARCH_TOPIC_LOC, null);
         if (topics != null) {
             String[] topicsList = topics.split(",");
             for (String topic : topicsList) {
@@ -227,7 +231,7 @@ public class DialogManager {
             }
         }
 
-        MaterialDialog topicsDialog = new MaterialDialog.Builder(context)
+        MaterialDialog searchTopicsDialog = new MaterialDialog.Builder(context)
                 .title(R.string.search_title)
                 .customView(R.layout.select_topics_dialog, false)
                 .positiveText(R.string.save_and_play)
@@ -236,22 +240,23 @@ public class DialogManager {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         String topicString = TextUtils.join(",", myTopics);
-                        prefManager.saveString(TOPIC_LOC, topicString);
+                        prefManager.saveString(SEARCH_TOPIC_LOC, topicString);
                         Toast.makeText(context, "Loading ad: " + topicString, Toast.LENGTH_SHORT).show();
                         context.loadVideoAdWithTopics(myTopics);
+                        context.showLoadingDialog();
                     }
                 }).negativeText(R.string.save)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         String topicString = TextUtils.join(",", myTopics);
-                        prefManager.saveString(TOPIC_LOC, topicString);
+                        prefManager.saveString(SEARCH_TOPIC_LOC, topicString);
                         Toast.makeText(context, "saved topics", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .build();
 
-        View optionView = topicsDialog.getCustomView();
+        View optionView = searchTopicsDialog.getCustomView();
         LinearLayout container = (LinearLayout) optionView.findViewById(R.id.optionContainer);
 
         final ListView myList = (ListView) container.findViewById(R.id.optionList);
@@ -281,7 +286,7 @@ public class DialogManager {
             }
         });
 
-        return topicsDialog;
+        return searchTopicsDialog;
     }
 
     public MaterialDialog createHistoryDialog(final MainActivity context) {
@@ -291,6 +296,7 @@ public class DialogManager {
         final MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .autoDismiss(true)
                 .title(R.string.history_title)
+                .theme(Theme.LIGHT)
                 .customView(R.layout.history_dialog, false)
                 .positiveText(R.string.done)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
@@ -323,6 +329,7 @@ public class DialogManager {
                                     public void onClick(View v) {
                                         List<String> topicsList = Arrays.asList(data.topics.split(","));
                                         context.loadVideoAdWithTopics(topicsList);
+                                        context.showLoadingDialog();
                                     }
                                 });
                     }
@@ -346,7 +353,7 @@ public class DialogManager {
         // Load the current wheel topics.
         final List<String> myTopics = new ArrayList<>(adManager.getWheelTopics().topics);
 
-        MaterialDialog topicsDialog = new MaterialDialog.Builder(context)
+        MaterialDialog wheelTopicsDialog = new MaterialDialog.Builder(context)
                 .title(R.string.wheel_title)
                 .customView(R.layout.select_topics_dialog, false)
                 .positiveText(R.string.save)
@@ -373,21 +380,13 @@ public class DialogManager {
                     }
                 }).build();
 
-        View optionView = topicsDialog.getCustomView();
+        View optionView = wheelTopicsDialog.getCustomView();
         LinearLayout container = (LinearLayout) optionView.findViewById(R.id.optionContainer);
 
         final ListView myList = (ListView) container.findViewById(R.id.optionList);
         myList.setItemsCanFocus(true);
 
         final MyTopicAdapter myTopicAdapter = new MyTopicAdapter(context, optionView, myTopics);
-
-        String topics = prefManager.getString(TOPIC_LOC, null);
-        if (topics != null) {
-            String[] topicsList = topics.split(",");
-            for (String topic : topicsList) {
-                myTopics.add(topic);
-            }
-        }
 
         myList.setAdapter(myTopicAdapter);
         myTopicAdapter.notifyDataSetChanged();
@@ -397,7 +396,7 @@ public class DialogManager {
             @Override
             public void onClick(View v) {
                 if (myTopics.size() < MAX_OPTIONS) {
-                    myTopics.add("new topic");
+                    myTopics.add(DEFAULT_TOPIC);
                     myTopicAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(context, "Max Topic Count Exceeded", Toast.LENGTH_SHORT).show();
@@ -405,6 +404,6 @@ public class DialogManager {
             }
         });
 
-        return topicsDialog;
+        return wheelTopicsDialog;
     }
 }
