@@ -274,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     private String getMessageFromErrorCode(final int errorCode) {
         switch ( errorCode ) {
             case 0:
-                return "Can\'t load ads right now, perhaps internet? Try again later"
+                return "Can\'t load ads right now, perhaps internet? Try again later";
             case 3:
             default:
                return "I could not find a video with those topics";
