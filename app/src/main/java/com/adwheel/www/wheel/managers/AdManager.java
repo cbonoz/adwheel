@@ -36,14 +36,50 @@ public class AdManager {
 
     private List<HistoryItem> historyItems;
 
-    private static final List<String> EXAMPLE_TOPICS = Arrays.asList(
-            "technology",
-            "games",
-            "clothing",
-            "sports",
+    public static final String[] EXAMPLE_TOPICS = new String[]{
+            "apparel",
+            "arts",
+            "beauty",
+            "business",
+            "computers",
+            "dining",
+            "education",
+            "electronics",
+            "entertainment",
+            "family",
+            "finance",
+            "fitness",
             "food",
-            "politics"
-    );
+            "garden",
+            "gifts",
+            "government",
+            "health",
+            "home",
+            "internet",
+            "jobs",
+            "law",
+            "leisure",
+            "media",
+            "news",
+            "publications",
+            "real estate",
+            "sports",
+            "travel",
+            "vehicles",
+            "dating", // begin sensitive topics
+            "downloads",
+            "drugs",
+            "esoteric",
+            "gambling",
+            "games",
+            "politics",
+            "religion",
+            "sex",
+            "surgery",
+            "weight loss"
+    };
+
+    private static final List<String> DEFAULT_TOPICS = Arrays.asList(EXAMPLE_TOPICS).subList(0, DialogManager.MAX_OPTIONS);
 
     public AdManager(PrefManager prefManager, Gson gson) {
         this.prefManager = prefManager;
@@ -52,15 +88,15 @@ public class AdManager {
     }
 
     private TopicsHolder getDefaultWheelTopics() {
-        return new TopicsHolder(EXAMPLE_TOPICS);
+        return new TopicsHolder(DEFAULT_TOPICS);
     }
 
     public AdRequest.Builder createAdBuilderFromPrefs() {
         AdRequest.Builder builder = new AdRequest.Builder()
                 .addTestDevice("24FC531E1163DBB1DF67674F1882463C");
 
+        Date birthday = new Date();
         try {
-            Date birthday = new Date();
             // TODO: just using birth year as the dominant factor.
             birthday.setYear(prefManager.getInt(BIRTH_YEAR_LOC, DEFAULT_BIRTH_YEAR));
             builder = builder.setBirthday(birthday);
@@ -75,7 +111,9 @@ public class AdManager {
             builder = builder.setGender(gender);
         }
 
-        builder = builder.setIsDesignedForFamilies(prefManager.getBoolean(FAMILY_LOC, false));
+        final boolean isFamily = prefManager.getBoolean(FAMILY_LOC, false);
+
+        builder = builder.setIsDesignedForFamilies(isFamily);
 
         return builder;
     }
@@ -147,6 +185,16 @@ public class AdManager {
             return getDefaultWheelTopics();
         } else {
             return topicsHolder;
+        }
+    }
+
+    public String getMessageFromErrorCode(final int errorCode) {
+        switch (errorCode) {
+            case 0:
+                return "Can\'t load ads right now, perhaps internet issue? Try again later";
+            case 3:
+            default:
+                return "I could not find a video, perhaps try changing your settings below";
         }
     }
 }

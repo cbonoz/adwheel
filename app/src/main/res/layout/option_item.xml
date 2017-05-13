@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     >
 
-    <EditText
+    <AutoCompleteTextView
         android:labelFor="@+id/optionEditText"
         android:id="@+id/optionEditText"
         android:layout_width="0dp"
@@ -16,7 +16,7 @@
         android:imeOptions="actionDone|flagNoExtractUi"
         android:inputType="textNoSuggestions"
         android:maxLines="1">
-    </EditText>
+    </AutoCompleteTextView>
 
     <Button
         android:id="@+id/deleteButton"

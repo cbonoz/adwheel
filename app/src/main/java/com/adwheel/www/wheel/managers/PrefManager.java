@@ -6,19 +6,16 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
-import static com.adwheel.www.wheel.WheelApplication.PREF_NAME;
-
-/**
- * Created on 4/19/17.
- */
 public class PrefManager {
     private static final String TAG = PrefManager.class.getSimpleName();
+
+    private static final String PREF_NAME = "prefs";
 
     private final SharedPreferences settings;
     private final Gson gson;
 
     public PrefManager(Application app, Gson gson) {
-        settings = app.getSharedPreferences(PREF_NAME, 0);
+        this.settings = app.getSharedPreferences(PREF_NAME, 0);
         this.gson = gson;
     }
 

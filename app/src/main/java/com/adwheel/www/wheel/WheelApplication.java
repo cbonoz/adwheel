@@ -10,8 +10,6 @@ import com.adwheel.www.wheel.injection.WheelModule;
 
 public class WheelApplication extends Application {
 
-    public static final String PREF_NAME = "prefs";
-
     private static WheelApplication app;
     private InjectionComponent mInjectionComponent;
 

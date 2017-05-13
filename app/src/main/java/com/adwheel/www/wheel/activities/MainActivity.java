@@ -1,5 +1,8 @@
 package com.adwheel.www.wheel.activities;
 
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -17,6 +20,7 @@ import com.adwheel.www.wheel.managers.AdManager;
 import com.adwheel.www.wheel.managers.DialogManager;
 import com.adwheel.www.wheel.managers.PrefManager;
 import com.adwheel.www.wheel.models.TopicsHolder;
+import com.adwheel.www.wheel.services.WheelHelper;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import com.google.android.gms.ads.AdRequest;
@@ -37,9 +41,6 @@ import butterknife.OnClick;
 import rubikstudio.library.LuckyWheelView;
 import rubikstudio.library.model.LuckyItem;
 
-import static com.adwheel.www.wheel.services.WheelHelper.getRandomIndex;
-import static com.adwheel.www.wheel.services.WheelHelper.getRandomNumberOfRotations;
-
 public class MainActivity extends AppCompatActivity implements RewardedVideoAdListener {
 
     private static final String TAG = "MainActivity";
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
     private TopicsHolder currentTopicsHolder;
 
-    private boolean isRunning = false;
+    private boolean isRunning;
 
     private String lastTopicString = "";
 
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     PrefManager prefManager;
     @Inject
     AdManager adManager;
+    @Inject
+    WheelHelper wheelHelper;
 
     @BindView(R.id.luckyWheel)
     LuckyWheelView luckyWheelView;
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     @OnClick(R.id.spinButton)
     void onWheelClick() {
         if (!isRunning) {
-            int index = getRandomIndex(data);
+            final int index = wheelHelper.getRandomIndex(data);
             String loadedTopic = data.get(index).topicString;
             loadVideoAdWithTopics(Arrays.asList(loadedTopic));
             luckyWheelView.startLuckyWheelWithTargetIndex(index);
@@ -101,14 +104,16 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        WheelApplication.getInjectionComponent().inject(this);
+        ButterKnife.bind(this);
+
+        isRunning = false;
+
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
             // Hide the top bar dynamically if present.
             bar.hide();
         }
-
-        WheelApplication.getInjectionComponent().inject(this);
-        ButterKnife.bind(this);
 
         currentTopicsHolder = adManager.getTopicsHolder(AdManager.WHEEL_TOPIC_LOC);
 
@@ -119,14 +124,19 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
         loadLuckyWheelData();
 
-        luckyWheelView.setRound(getRandomNumberOfRotations());
+        luckyWheelView.setRound(wheelHelper.getRandomNumberOfRotations());
 
         luckyWheelView.setLuckyRoundItemSelectedListener(new LuckyWheelView.LuckyRoundItemSelectedListener() {
             @Override
             public void LuckyRoundItemSelected(int index) {
                 isRunning = false;
                 String topicsString = data.get(index).topicString;
-                showVideoAd(topicsString);
+                if (mAd.isLoaded()) {
+                    showVideoAd(topicsString);
+                } else {
+                    showLoadingDialog();
+                }
+
             }
         });
 
@@ -212,6 +222,13 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         loadingDialog = new MaterialDialog.Builder(this)
                 .title(R.string.loading)
                 .content(adManager.getRandomLoadingText())
+                .cancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        mAd.destroy(MainActivity.this);
+                        makeToast("Cancelled");
+                    }
+                })
                 .progress(true, 0)
                 .show();
     }
@@ -251,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     @Override
     public void onRewardedVideoAdFailedToLoad(int errorCode) {
         // Toast.makeText(this, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
-        makeToast(getMessageFromErrorCode(errorCode));
+        makeToast(adManager.getMessageFromErrorCode(errorCode));
         attemptLoadingDialogDismiss();
         final String message = "Video load failed, errorCode: " + errorCode;
         Log.e(TAG, message);
@@ -279,13 +296,4 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         Log.d(TAG, "onRewardedVideoStarted");
     }
 
-    private String getMessageFromErrorCode(final int errorCode) {
-        switch (errorCode) {
-            case 0:
-                return "Can\'t load ads right now, perhaps internet issue? Try again later";
-            case 3:
-            default:
-                return "I could not find a video, perhaps try changing your settings below";
-        }
-    }
 }

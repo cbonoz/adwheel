@@ -4,17 +4,18 @@ import java.util.List;
 import java.util.Random;
 
 public class WheelHelper {
-    private WheelHelper() {
 
+    private final Random rand;
+
+    public WheelHelper() {
+        rand = new Random(System.currentTimeMillis());
     }
 
-    public static <T> int getRandomIndex(List<T> arr) {
-        Random rand = new Random();
+    public <T> int getRandomIndex(List<T> arr) {
         return rand.nextInt(arr.size() - 1);
     }
 
-    public static int getRandomNumberOfRotations() {
-        Random rand = new Random();
-        return rand.nextInt(10) + 5;
+    public int getRandomNumberOfRotations() {
+        return rand.nextInt(8) + 5;
     }
 }

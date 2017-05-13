@@ -5,6 +5,7 @@ import com.adwheel.www.wheel.WheelApplication;
 import com.adwheel.www.wheel.managers.AdManager;
 import com.adwheel.www.wheel.managers.DialogManager;
 import com.adwheel.www.wheel.managers.PrefManager;
+import com.adwheel.www.wheel.services.WheelHelper;
 
 import com.google.gson.Gson;
 
@@ -32,6 +33,12 @@ public class WheelModule {
     @Singleton
     Gson providesGson() {
         return new Gson();
+    }
+
+    @Provides
+    @Singleton
+    WheelHelper providesWheelHelper() {
+       return new WheelHelper();
     }
 
     @Provides

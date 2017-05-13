@@ -7,18 +7,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.adwheel.www.wheel.R;
+import com.adwheel.www.wheel.managers.AdManager;
 
 import java.util.List;
 
 public class MyTopicAdapter extends BaseAdapter {
 
-    private static final int MIN_LENGTH = 2;
+    private final ArrayAdapter<String> adapter;
+
+    private static final int MIN_LENGTH = 1;
 
     private final Activity activity;
     private final View optionView;
@@ -28,6 +33,8 @@ public class MyTopicAdapter extends BaseAdapter {
         this.activity = activity;
         this.optionView = optionView;
         this.myOptions = myOptions;
+        adapter = new ArrayAdapter<>(activity,
+                android.R.layout.simple_dropdown_item_1line, AdManager.EXAMPLE_TOPICS);
     }
 
     public int getCount() {
@@ -47,7 +54,11 @@ public class MyTopicAdapter extends BaseAdapter {
         LayoutInflater inflater = activity.getLayoutInflater();
         convertView = inflater.inflate(R.layout.option_item, parent, false);
         holder = new ViewHolder();
-        holder.optionEditText = (EditText) convertView.findViewById(R.id.optionEditText);
+        holder.optionEditText = (AutoCompleteTextView) convertView.findViewById(R.id.optionEditText);
+
+
+        holder.optionEditText.setAdapter(adapter);
+
         holder.deleteButton = (Button) convertView.findViewById(R.id.deleteButton);
 
         holder.optionEditText.setFocusable(true);
@@ -67,7 +78,7 @@ public class MyTopicAdapter extends BaseAdapter {
                     Log.d("GCM", "Item removed from position: " + position);
                     notifyDataSetChanged();
                 } else {
-                    Toast.makeText(activity, "You must have at least " + MIN_LENGTH + "options", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "You must have at least " + MIN_LENGTH + " option.", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -100,7 +111,7 @@ public class MyTopicAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        EditText optionEditText;
+        AutoCompleteTextView optionEditText;
         Button deleteButton;
     }
 }
