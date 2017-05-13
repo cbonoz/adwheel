@@ -82,7 +82,7 @@ public class AdManager {
         this.historyItems = new ArrayList<>();
     }
 
-    private TopicsHolder getDefaultWheelTopics() {
+    public TopicsHolder getDefaultWheelTopics() {
         return new TopicsHolder(DEFAULT_TOPICS);
     }
 

@@ -360,20 +360,31 @@ public class DialogManager {
                             Toast.makeText(context, "Must have at least 2 options", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        TopicsHolder topicsHolder = new TopicsHolder(myTopics);
+                        final TopicsHolder topicsHolder = new TopicsHolder(myTopics);
                         adManager.saveTopicsHolder(WHEEL_TOPIC_LOC, topicsHolder);
                         context.updateWheelTopics(topicsHolder);
                         Log.d(TAG, "updated topics");
                         dialog.dismiss();
                     }
-                }).negativeText(R.string.cancel)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                }).neutralText(R.string.cancel)
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         Log.d(TAG, "cancelled change of wheel topics");
                         dialog.dismiss();
                     }
-                }).build();
+                }).negativeText(R.string.reset)
+                .onNegative(new SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        final TopicsHolder topicsHolder = adManager.getDefaultWheelTopics();
+                        adManager.saveTopicsHolder(WHEEL_TOPIC_LOC, topicsHolder);
+                        context.updateWheelTopics(topicsHolder);
+                        Log.d(TAG, "reset wheel");
+                        dialog.dismiss();
+                    }
+                })
+                .build();
 
         View optionView = wheelTopicsDialog.getCustomView();
         LinearLayout container = (LinearLayout) optionView.findViewById(R.id.optionContainer);

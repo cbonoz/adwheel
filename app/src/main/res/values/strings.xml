@@ -42,6 +42,7 @@
 
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="reset">Reset</string>
     <string name="done">Done</string>
     <string name="save">Save</string>
     <string name="clear_history">Clear History</string>
