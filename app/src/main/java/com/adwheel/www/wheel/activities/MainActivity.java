@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         }
         final AdRequest adRequest = adRequestBuilder.build();
 
-        lastTopicString = TextUtils.join(", ", adRequest.getKeywords());
+        lastTopicString = TextUtils.join(",", adRequest.getKeywords());
         Log.d(TAG, "loadVideo with topics: " + lastTopicString);
         mAd.loadAd(getString(R.string.test_ad_unit_id), adRequest);
     }
@@ -199,7 +199,8 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     }
 
     private void showVideoAd(String topicString) {
-        makeToast("showVideoAd: " + topicString);
+        Log.d(TAG, "showVideoAd: " + topicString);
+        makeToast(topicString);
         if (BuildConfig.DEBUG || mAd.isLoaded()) {
             adManager.saveTopicStringToHistory(topicString);
             mAd.show();
@@ -265,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
     @Override
     public void onRewardedVideoAdFailedToLoad(int errorCode) {
-        // Toast.makeText(this, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
         makeToast(adManager.getMessageFromErrorCode(errorCode));
         attemptLoadingDialogDismiss();
         final String message = "Video load failed, errorCode: " + errorCode;
