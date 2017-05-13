@@ -1,5 +1,6 @@
 package com.adwheel.www.wheel.managers;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.IdRes;
@@ -32,6 +33,7 @@ import com.afollestad.materialdialogs.MaterialDialog.Builder;
 import com.afollestad.materialdialogs.MaterialDialog.SingleButtonCallback;
 import com.afollestad.materialdialogs.Theme;
 import com.github.ybq.android.spinkit.SpinKitView;
+
 import com.google.android.gms.ads.AdRequest;
 
 import net.idik.lib.slimadapter.SlimAdapter;
@@ -57,14 +59,14 @@ import static com.google.android.gms.internal.zzt.TAG;
 public class DialogManager {
 
     public static final int MAX_OPTIONS = 10;
-    public static final String DEFAULT_TOPIC = "technology";
 
-    private final Application application;
+    public static final String DEFAULT_TOPIC = "edit me";
+    public static final String FIRST_BOOT_LOC = "first_boot";
+
     private final PrefManager prefManager;
     private final AdManager adManager;
 
-    public DialogManager(WheelApplication application, PrefManager prefManager, AdManager adManager) {
-        this.application = application;
+    public DialogManager(PrefManager prefManager, AdManager adManager) {
         this.prefManager = prefManager;
         this.adManager = adManager;
     }
@@ -88,7 +90,6 @@ public class DialogManager {
 
     /**
      * general helper function to load the given url in the webview on the activity layout
-     * @param url
      */
     private void loadWebView(WebView view, String url) {
         view.loadUrl(url);
@@ -104,7 +105,7 @@ public class DialogManager {
         final MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .autoDismiss(true)
                 .title(R.string.settings_title)
-                .customView(R.layout.settings_dialog, false)
+                .customView(R.layout.settings_dialog, true) // wrap in scroll view.
                 .positiveText(R.string.done)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
@@ -185,14 +186,14 @@ public class DialogManager {
         yearSeekBar.setProgress((int) year);
 
         final TextView yearSelectedText = (TextView) view.findViewById(R.id.selectedBirthText);
-        yearSelectedText.setText(year+"");
+        yearSelectedText.setText(year + "");
 
         yearSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 prefManager.saveInt(BIRTH_YEAR_LOC, value);
                 Log.d(TAG, "onProgressChanged: " + value);
-                yearSelectedText.setText(value+"");
+                yearSelectedText.setText(value + "");
 
             }
 
@@ -256,7 +257,6 @@ public class DialogManager {
 
         final MyTopicAdapter myTopicAdapter = new MyTopicAdapter(context, optionView, myTopics);
 
-
         final String exampleOption = "new topic";
         if (myTopics.size() < 1) {
             myTopics.add(exampleOption);
@@ -304,6 +304,7 @@ public class DialogManager {
                         adManager.clearHistory();
                         Toast.makeText(context, "history erased", Toast.LENGTH_SHORT).show();
 
+
                     }
                 })
                 .build();
@@ -345,7 +346,6 @@ public class DialogManager {
             TextView noHistoryText = (TextView) view.findViewById(R.id.noHistoryText);
             noHistoryText.setVisibility(View.VISIBLE);
         }
-
 
         return dialog;
     }
@@ -407,4 +407,14 @@ public class DialogManager {
 
         return wheelTopicsDialog;
     }
+
+    public void showAboutDialogOnFirstBoot(final MainActivity context) {
+        final boolean showedAbout = prefManager.getBoolean(FIRST_BOOT_LOC, false);
+        if (showedAbout) {
+            return;
+        }
+        context.onLogoClick();
+        prefManager.saveBoolean(FIRST_BOOT_LOC, true);
+    }
+
 }

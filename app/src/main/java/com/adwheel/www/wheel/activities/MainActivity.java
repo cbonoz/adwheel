@@ -18,6 +18,7 @@ import com.adwheel.www.wheel.managers.DialogManager;
 import com.adwheel.www.wheel.managers.PrefManager;
 import com.adwheel.www.wheel.models.TopicsHolder;
 import com.afollestad.materialdialogs.MaterialDialog;
+
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
@@ -40,6 +41,7 @@ import static com.adwheel.www.wheel.services.WheelHelper.getRandomIndex;
 import static com.adwheel.www.wheel.services.WheelHelper.getRandomNumberOfRotations;
 
 public class MainActivity extends AppCompatActivity implements RewardedVideoAdListener {
+
     private static final String TAG = "MainActivity";
 
     private MaterialDialog dialog;
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     private TopicsHolder currentTopicsHolder;
 
     private boolean isRunning = false;
+
+    private String lastTopicString = "";
 
     @Inject
     DialogManager dialogManager;
@@ -81,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     @OnClick(R.id.logoButton)
     public void onLogoClick() {
         // Show info dialog when the header image is clicked.
-        Log.d(TAG, "onLogoClick");
         MaterialDialog dialog = dialogManager.createAboutDialog(MainActivity.this);
         dialog.show();
     }
@@ -149,8 +152,9 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                     }
                 });
 
-
         luckyWheelView.bringToFront();
+
+        dialogManager.showAboutDialogOnFirstBoot(this);
     }
 
     public void loadVideoAdWithTopics(List<String> topics) {
@@ -160,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
             adRequestBuilder = adRequestBuilder.addKeyword(topic);
         }
         final AdRequest adRequest = adRequestBuilder.build();
-        String topicString = TextUtils.join(", ", adRequest.getKeywords());
+        lastTopicString = TextUtils.join(", ", adRequest.getKeywords());
         // Log.d(TAG, "Loading ad topics: " + topicString);
         mAd.loadAd(getString(R.string.test_ad_unit_id), adRequest);
     }
@@ -214,7 +218,9 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
     private void attemptLoadingDialogDismiss() {
         try {
-            loadingDialog.dismiss();
+            if (loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
         } catch (Exception e) {
             Log.e(TAG, "loadingDialog already dismissed");
         }
@@ -247,12 +253,14 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         // Toast.makeText(this, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
         makeToast(getMessageFromErrorCode(errorCode));
         attemptLoadingDialogDismiss();
-        Log.e(TAG, "Video load failed, errorCode: " + errorCode);
+        final String message = "Video load failed, errorCode: " + errorCode;
+        Log.e(TAG, message);
+        makeToast(message);
     }
 
     @Override
     public void onRewardedVideoAdLoaded() {
-        Log.d(TAG, "onRewardedVideoAdLoaded");
+        Log.d(TAG, "onRewardedVideoAdLoaded: " + lastTopicString);
         if (!isRunning) {
             Log.d(TAG, "show on load since spinner not rotating");
             attemptLoadingDialogDismiss();
@@ -272,12 +280,12 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     }
 
     private String getMessageFromErrorCode(final int errorCode) {
-        switch ( errorCode ) {
+        switch (errorCode) {
             case 0:
-                return "Can\'t load ads right now, perhaps internet? Try again later";
+                return "Can\'t load ads right now, perhaps internet issue? Try again later";
             case 3:
             default:
-               return "I could not find a video, perhaps change your settings?";
+                return "I could not find a video, perhaps try changing your settings below";
         }
     }
 }

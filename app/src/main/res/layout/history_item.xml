@@ -18,6 +18,8 @@
             android:id="@+id/topics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:scrollHorizontally="true"
@@ -49,7 +51,7 @@
 
         <Button
             android:id="@+id/playButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="@color/primary_light"

@@ -5,6 +5,7 @@ import com.adwheel.www.wheel.WheelApplication;
 import com.adwheel.www.wheel.managers.AdManager;
 import com.adwheel.www.wheel.managers.DialogManager;
 import com.adwheel.www.wheel.managers.PrefManager;
+
 import com.google.gson.Gson;
 
 import javax.inject.Singleton;
@@ -47,10 +48,8 @@ public class WheelModule {
 
     @Provides
     @Singleton
-    DialogManager provideDialogManager(WheelApplication application,
-                                       PrefManager prefManager,
-                                       AdManager adManager) {
-        return new DialogManager(application, prefManager, adManager);
+    DialogManager provideDialogManager(PrefManager prefManager, AdManager adManager) {
+        return new DialogManager(prefManager, adManager);
     }
 
 }

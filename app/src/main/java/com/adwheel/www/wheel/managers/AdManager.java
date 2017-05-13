@@ -22,7 +22,7 @@ public class AdManager {
     public static final String GENDER_LOC = "gender";
     public static final String BIRTH_YEAR_LOC = "birthyear";
     public static final String SEARCH_TOPIC_LOC = "search_topics";
-    public static final String WHEEL_TOPIC_LOC = "search_topics";
+    public static final String WHEEL_TOPIC_LOC = "wheel_topics";
     public static final String FAMILY_LOC = "family";
 
     public static final String HISTORY_LOC = "history";
@@ -113,7 +113,6 @@ public class AdManager {
     }
 
     public void clearHistory() {
-        final long timestamp = System.currentTimeMillis();
         prefManager.saveLong(HISTORY_COUNT_LOC, 0);
         historyItems.clear();
     }
