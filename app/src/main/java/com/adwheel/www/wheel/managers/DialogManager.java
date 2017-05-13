@@ -22,10 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adwheel.www.wheel.R;
-import com.adwheel.www.wheel.WheelApplication;
 import com.adwheel.www.wheel.activities.MainActivity;
 import com.adwheel.www.wheel.adapters.MyTopicAdapter;
-import com.adwheel.www.wheel.models.HistoryItem;
 import com.adwheel.www.wheel.models.TopicsHolder;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -59,6 +57,7 @@ import static com.google.android.gms.internal.zzt.TAG;
 public class DialogManager {
 
     public static final int MAX_OPTIONS = 10;
+    public static final int MIN_OPTIONS = 1;
 
     public static final String DEFAULT_TOPIC = "edit me";
     public static final String FIRST_BOOT_LOC = "first_boot";
@@ -235,7 +234,6 @@ public class DialogManager {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         adManager.saveTopicsHolder(SEARCH_TOPIC_LOC, new TopicsHolder(myTopics));
-                        Toast.makeText(context, "Loading ad: " + myTopics, Toast.LENGTH_SHORT).show();
                         context.loadVideoAdWithTopics(myTopics);
                         context.showLoadingDialog();
                     }
@@ -318,19 +316,19 @@ public class DialogManager {
         loadingSpinner.setVisibility(View.VISIBLE);
 
         final SlimAdapter slimAdapter = SlimAdapter.create()
-                .register(R.layout.history_item, new SlimInjector<HistoryItem>() {
+                .register(R.layout.history_item, new SlimInjector<TopicsHolder>() {
                     @Override
-                    public void onInject(final HistoryItem data, IViewInjector injector) {
+                    public void onInject(final TopicsHolder data, IViewInjector injector) {
                         final String metaData = String.format(Locale.US, "%s", new Date(data.timestamp));
-                        injector.text(R.id.topics, data.topics)
+                        final String topicString = TextUtils.join(", ", data.topics);
+                        injector.text(R.id.topics, topicString)
                                 .text(R.id.metadata, metaData)
                                 .textColor(R.id.metadata, R.color.primary_light)
                                 .textSize(R.id.metadata, 12)
                                 .clicked(R.id.playButton, new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        List<String> topicsList = Arrays.asList(data.topics.split(","));
-                                        context.loadVideoAdWithTopics(topicsList);
+                                        context.loadVideoAdWithTopics(data.topics);
                                         context.showLoadingDialog();
                                     }
                                 });
@@ -338,7 +336,7 @@ public class DialogManager {
                 }).attachTo(historyListView);
 
         // TODO: make async.
-        List<HistoryItem> historyItems = adManager.getTopicHistory();
+        List<TopicsHolder> historyItems = adManager.getTopicHistory();
         slimAdapter.updateData(historyItems);
 
         loadingSpinner.setVisibility(View.GONE);

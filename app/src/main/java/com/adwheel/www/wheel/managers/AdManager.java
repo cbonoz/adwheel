@@ -2,7 +2,6 @@ package com.adwheel.www.wheel.managers;
 
 import android.util.Log;
 
-import com.adwheel.www.wheel.models.HistoryItem;
 import com.adwheel.www.wheel.models.TopicsHolder;
 import com.google.android.gms.ads.AdRequest;
 import com.google.gson.Gson;
@@ -34,7 +33,7 @@ public class AdManager {
 //    public static final String FEMALE = "Female";
 //    public static final String NEUTRAL = "Neutral";
 
-    private List<HistoryItem> historyItems;
+    private List<TopicsHolder> historyItems;
 
     public static final String[] EXAMPLE_TOPICS = new String[]{
             "apparel",
@@ -118,14 +117,14 @@ public class AdManager {
         return builder;
     }
 
-    public List<HistoryItem> getTopicHistory() {
+    public List<TopicsHolder> getTopicHistory() {
         final long count = prefManager.getLong(HISTORY_COUNT_LOC, 0);
         String saveLoc;
         for (int i = historyItems.size(); i < count; i++) {
             saveLoc = HISTORY_LOC + i;
             String itemString = prefManager.getString(saveLoc, null);
             try {
-                historyItems.add(gson.fromJson(itemString, HistoryItem.class));
+                historyItems.add(gson.fromJson(itemString, TopicsHolder.class));
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
@@ -145,7 +144,8 @@ public class AdManager {
         final long count = prefManager.getLong(HISTORY_COUNT_LOC, 0);
         final String saveLoc = HISTORY_LOC + count;
 
-        final HistoryItem item = new HistoryItem(timestamp, topicString);
+        final String[] topics = topicString.split(",");
+        final TopicsHolder item = new TopicsHolder(Arrays.asList(topics), System.currentTimeMillis());
         prefManager.saveString(saveLoc, gson.toJson(item));
         incrementHistoryCount(count);
     }
@@ -181,7 +181,7 @@ public class AdManager {
 
         // Validation of returned topics.
         int numTopics = topicsHolder.topics.size();
-        if (numTopics < 2 || numTopics > DialogManager.MAX_OPTIONS) {
+        if (numTopics < DialogManager.MIN_OPTIONS || numTopics > DialogManager.MAX_OPTIONS) {
             return getDefaultWheelTopics();
         } else {
             return topicsHolder;

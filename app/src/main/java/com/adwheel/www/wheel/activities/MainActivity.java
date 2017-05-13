@@ -168,14 +168,14 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     }
 
     public void loadVideoAdWithTopics(List<String> topics) {
-        Log.d(TAG, "loadVideo with topics: " + topics.toString());
         AdRequest.Builder adRequestBuilder = adManager.createAdBuilderFromPrefs();
         for (String topic : topics) {
             adRequestBuilder = adRequestBuilder.addKeyword(topic);
         }
         final AdRequest adRequest = adRequestBuilder.build();
+
         lastTopicString = TextUtils.join(", ", adRequest.getKeywords());
-        // Log.d(TAG, "Loading ad topics: " + topicString);
+        Log.d(TAG, "loadVideo with topics: " + lastTopicString);
         mAd.loadAd(getString(R.string.test_ad_unit_id), adRequest);
     }
 
@@ -201,10 +201,8 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     private void showVideoAd(String topicString) {
         makeToast("showVideoAd: " + topicString);
         if (BuildConfig.DEBUG || mAd.isLoaded()) {
-            // Add back in for deployment.
-            mAd.show();
-            // TODO: save ad viewing to history.
             adManager.saveTopicStringToHistory(topicString);
+            mAd.show();
         } else {
             final String message = "Video not loaded yet";
             makeToast(message);
@@ -281,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         if (!isRunning) {
             Log.d(TAG, "show on load since spinner not rotating");
             attemptLoadingDialogDismiss();
-            mAd.show();
+            showVideoAd(lastTopicString);
         }
     }
 

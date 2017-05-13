@@ -11,19 +11,17 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.adwheel.www.wheel.R;
 import com.adwheel.www.wheel.managers.AdManager;
+import com.adwheel.www.wheel.managers.DialogManager;
 
 import java.util.List;
 
 public class MyTopicAdapter extends BaseAdapter {
 
     private final ArrayAdapter<String> adapter;
-
-    private static final int MIN_LENGTH = 1;
 
     private final Activity activity;
     private final View optionView;
@@ -73,12 +71,12 @@ public class MyTopicAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View view) {
-                if (myOptions.size() > MIN_LENGTH) {
+                if (myOptions.size() > DialogManager.MIN_OPTIONS) {
                     myOptions.remove(position);
                     Log.d("GCM", "Item removed from position: " + position);
                     notifyDataSetChanged();
                 } else {
-                    Toast.makeText(activity, "You must have at least " + MIN_LENGTH + " option.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "You must have at least " + DialogManager.MIN_OPTIONS + " option.", Toast.LENGTH_SHORT).show();
                 }
 
             }
