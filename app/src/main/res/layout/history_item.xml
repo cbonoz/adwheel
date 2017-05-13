@@ -59,7 +59,7 @@
             android:layout_margin="2dp"
             android:background="@color/primary_light"
             android:padding="5dp"
-            android:text="PLAY"
+            android:text="@string/play"
             android:textColor="@color/primary_text" />
 
     </FrameLayout>

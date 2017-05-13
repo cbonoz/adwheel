@@ -12,7 +12,7 @@
     <TextView
         android:id="@+id/yearText"
         android:textSize="24sp"
-        android:text="Select Birth Year"
+        android:text="@string/select_birth_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -32,7 +32,7 @@
 
     <TextView
         android:id="@+id/genderText"
-        android:text="Select Gender"
+        android:text="@string/select_gender"
         android:textSize="24sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -67,7 +67,7 @@
 
     <TextView
         android:id="@+id/familyText"
-        android:text="Family Oriented"
+        android:text="@string/family_oriented"
         android:textSize="24sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

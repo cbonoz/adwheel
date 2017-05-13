@@ -23,6 +23,13 @@
     <!--TODO: Change this, For Testing ONLY-->
     <string name="test_ad_unit_id">ca-app-pub-3940256099942544/5224354917</string>
 
+    <string name="add_topic">ADD TOPIC</string>
+    <string name="family_oriented">Family Oriented</string>
+    <string name="spin_the_wheel">SPIN THE WHEEL</string>
+    <string name="select_gender">Select Gender</string>
+    <string name="play">PLAY</string>
+    <string name="select_birth_year">Select birth year</string>
+
     <string name="video_play_after_spin">Video will play once spin completes.</string>
 
     <!--<string name="banner_ad_unit_id">ca-app-pub-5780102660170607/4702427976</string>-->
@@ -74,6 +81,5 @@
     <string name="about_title">Welcome</string>
     <string name="history_title">Your History</string>
     <string name="wheel_title">Configure your random topics for the wheel.</string>
-
 
 </resources>
