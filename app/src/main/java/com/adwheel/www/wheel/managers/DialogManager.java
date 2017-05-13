@@ -348,12 +348,12 @@ public class DialogManager {
         // Load the current wheel topics.
         final List<String> myTopics = new ArrayList<>(adManager.getTopicsHolder(WHEEL_TOPIC_LOC).topics);
 
-        MaterialDialog wheelTopicsDialog = new MaterialDialog.Builder(context)
+        MaterialDialog wheelTopicsDialog = new Builder(context)
                 .title(R.string.wheel_title)
                 .customView(R.layout.select_topics_dialog, false)
                 .positiveText(R.string.save)
                 .autoDismiss(false)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                .onPositive(new SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         if (myTopics.size() < 2) {
@@ -367,7 +367,7 @@ public class DialogManager {
                         dialog.dismiss();
                     }
                 }).neutralText(R.string.cancel)
-                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                .onNeutral(new SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         Log.d(TAG, "cancelled change of wheel topics");
@@ -381,6 +381,7 @@ public class DialogManager {
                         adManager.saveTopicsHolder(WHEEL_TOPIC_LOC, topicsHolder);
                         context.updateWheelTopics(topicsHolder);
                         Log.d(TAG, "reset wheel");
+                        Toast.makeText(context, "restored topics", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 })
