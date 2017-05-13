@@ -1,7 +1,5 @@
 package com.adwheel.www.wheel.managers;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -41,7 +39,6 @@ import net.idik.lib.slimadapter.viewinjector.IViewInjector;
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -59,7 +56,7 @@ public class DialogManager {
     public static final int MAX_OPTIONS = 10;
     public static final int MIN_OPTIONS = 1;
 
-    public static final String DEFAULT_TOPIC = "edit me";
+    public static final String DEFAULT_TOPIC_TEXT = "";
     public static final String FIRST_BOOT_LOC = "first_boot";
 
     private final PrefManager prefManager;
@@ -255,9 +252,8 @@ public class DialogManager {
 
         final MyTopicAdapter myTopicAdapter = new MyTopicAdapter(context, optionView, myTopics);
 
-        final String exampleOption = "new topic";
         if (myTopics.size() < 1) {
-            myTopics.add(exampleOption);
+            myTopics.add(DEFAULT_TOPIC_TEXT);
         }
 
         myList.setAdapter(myTopicAdapter);
@@ -268,7 +264,7 @@ public class DialogManager {
             @Override
             public void onClick(View v) {
                 if (myTopics.size() < MAX_OPTIONS) {
-                    myTopics.add(exampleOption);
+                    myTopics.add(DEFAULT_TOPIC_TEXT);
                     myTopicAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(context, "Max Topic Count Exceeded", Toast.LENGTH_SHORT).show();
@@ -320,7 +316,7 @@ public class DialogManager {
                     @Override
                     public void onInject(final TopicsHolder data, IViewInjector injector) {
                         final String metaData = String.format(Locale.US, "%s", new Date(data.timestamp));
-                        final String topicString = TextUtils.join(", ", data.topics);
+                        final String topicString = TextUtils.join(",", data.topics);
                         injector.text(R.id.topics, topicString)
                                 .text(R.id.metadata, metaData)
                                 .textColor(R.id.metadata, R.color.primary_light)
@@ -395,7 +391,7 @@ public class DialogManager {
             @Override
             public void onClick(View v) {
                 if (myTopics.size() < MAX_OPTIONS) {
-                    myTopics.add(DEFAULT_TOPIC);
+                    myTopics.add(DEFAULT_TOPIC_TEXT);
                     myTopicAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(context, "Max Topic Count Exceeded", Toast.LENGTH_SHORT).show();

@@ -28,10 +28,6 @@ public class AdManager {
     public static final String HISTORY_COUNT_LOC = "count";
 
     public static final int DEFAULT_BIRTH_YEAR = 2000;
-//
-//    public static final String MALE = "Male";
-//    public static final String FEMALE = "Female";
-//    public static final String NEUTRAL = "Neutral";
 
     private List<TopicsHolder> historyItems;
 
@@ -140,7 +136,6 @@ public class AdManager {
     }
 
     public void saveTopicStringToHistory(String topicString) {
-        final long timestamp = System.currentTimeMillis();
         final long count = prefManager.getLong(HISTORY_COUNT_LOC, 0);
         final String saveLoc = HISTORY_LOC + count;
 

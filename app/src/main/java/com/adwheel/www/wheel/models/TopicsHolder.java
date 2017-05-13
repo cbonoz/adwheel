@@ -8,14 +8,6 @@ public class TopicsHolder {
     public long timestamp;
     public ArrayList<String> topics;
 
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public TopicsHolder(List<String> topics) {
         // convert to support nonabstract methods after deserialization.
         this.topics = new ArrayList<>(topics);
