@@ -106,7 +106,7 @@ public class DialogManager {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        Toast.makeText(context, "preferences saved", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.prefs_saved, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .build();
@@ -239,7 +239,7 @@ public class DialogManager {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         adManager.saveTopicsHolder(SEARCH_TOPIC_LOC, new TopicsHolder(myTopics));
-                        Toast.makeText(context, "saved topics", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.topics_saved, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .build();
@@ -267,7 +267,7 @@ public class DialogManager {
                     myTopics.add(DEFAULT_TOPIC_TEXT);
                     myTopicAdapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(context, "Max Topic Count Exceeded", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.max_topics, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -296,9 +296,7 @@ public class DialogManager {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         adManager.clearHistory();
-                        Toast.makeText(context, "history erased", Toast.LENGTH_SHORT).show();
-
-
+                        Toast.makeText(context, R.string.history_erased, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .build();
@@ -357,7 +355,7 @@ public class DialogManager {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         if (myTopics.size() < 2) {
-                            Toast.makeText(context, "Must have at least 2 options", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.min_topics, Toast.LENGTH_SHORT).show();
                             return;
                         }
                         final TopicsHolder topicsHolder = new TopicsHolder(myTopics);
@@ -381,7 +379,7 @@ public class DialogManager {
                         adManager.saveTopicsHolder(WHEEL_TOPIC_LOC, topicsHolder);
                         context.updateWheelTopics(topicsHolder);
                         Log.d(TAG, "reset wheel");
-                        Toast.makeText(context, "restored topics", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.topics_restored, Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 })
@@ -406,7 +404,7 @@ public class DialogManager {
                     myTopics.add(DEFAULT_TOPIC_TEXT);
                     myTopicAdapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(context, "Max Topic Count Exceeded", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.max_topics, Toast.LENGTH_SHORT).show();
                 }
             }
         });

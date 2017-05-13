@@ -76,7 +76,7 @@ public class MyTopicAdapter extends BaseAdapter {
                     Log.d("GCM", "Item removed from position: " + position);
                     notifyDataSetChanged();
                 } else {
-                    Toast.makeText(activity, "You must have at least " + DialogManager.MIN_OPTIONS + " option.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.min_topics, Toast.LENGTH_SHORT).show();
                 }
 
             }

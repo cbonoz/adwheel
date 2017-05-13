@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
             adManager.saveTopicStringToHistory(topicString);
             mAd.show();
         } else {
-            final String message = "Video not loaded yet";
+            final String message = getString(R.string.not_loaded_yet);
             makeToast(message);
             Log.e(TAG, message);
         }
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                     @Override
                     public void onCancel(DialogInterface dialog) {
                         mAd.destroy(MainActivity.this);
-                        makeToast("Cancelled");
+                        makeToast(getString(R.string.cancelled));
                     }
                 })
                 .progress(true, 0)
@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     public void onRewardedVideoAdFailedToLoad(int errorCode) {
         makeToast(adManager.getMessageFromErrorCode(errorCode));
         attemptLoadingDialogDismiss();
-        final String message = "Video load failed, errorCode: " + errorCode;
+        final String message = getString(R.string.ad_error) + errorCode;
         Log.e(TAG, message);
         makeToast(message);
     }

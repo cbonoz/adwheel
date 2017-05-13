@@ -36,6 +36,10 @@
     <string name="menu_about">About</string>
     <string name="menu_history">History</string>
 
+    <string name="ad_error">Video load failed, errorCode: </string>
+
+    <string name="not_loaded_yet">Video not loaded yet</string>
+
     <string name="click_to_spin">Click to Spin</string>
 
     <string name="no_history">No Viewing History yet.</string>
@@ -45,8 +49,19 @@
     <string name="reset">Reset</string>
     <string name="done">Done</string>
     <string name="save">Save</string>
+    <string name="cancelled">Cancelled</string>
     <string name="clear_history">Clear History</string>
     <string name="save_and_play">Save and Play</string>
+
+    <string name="prefs_saved">saved preferences</string>
+    <string name="topics_saved">saved topics</string>
+
+    <string name="history_erased">history erased</string>
+
+    <string name="max_topics">Max topics count exceeded</string>
+    <string name="min_topics">Must have at least 1 option</string>
+    <string name="topics_restored">topics restored</string>
+
 
     <string name="male">Male</string>
     <string name="female">Female</string>
