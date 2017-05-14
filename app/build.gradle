@@ -14,7 +14,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.adwheel.www.wheel"
-        minSdkVersion 21
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 2
         versionName "1.0-b"
