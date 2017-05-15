@@ -30,6 +30,7 @@
 
         <!--android:screenOrientation="portrait"-->
         <activity android:name=".activities.MainActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/FullscreenTheme"/>
     </application>
 

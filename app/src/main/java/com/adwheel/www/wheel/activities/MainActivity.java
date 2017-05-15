@@ -3,6 +3,7 @@ package com.adwheel.www.wheel.activities;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -61,8 +62,6 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     @Inject
     DialogManager dialogManager;
     @Inject
-    PrefManager prefManager;
-    @Inject
     AdManager adManager;
     @Inject
     WheelHelper wheelHelper;
@@ -73,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     @OnClick(R.id.spinButton)
     void onWheelClick() {
         if (!isRunning) {
+            // Prevent screen rotations temporarily
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
             final int index = wheelHelper.getRandomIndex(data);
             String loadedTopic = data.get(index).topicString;
             loadVideoAdWithTopics(Arrays.asList(loadedTopic));
@@ -163,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                 });
 
         luckyWheelView.bringToFront();
-
         dialogManager.showAboutDialogOnFirstBoot(this);
     }
 
@@ -279,6 +279,8 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         if (!isRunning) {
             Log.d(TAG, "show on load since spinner not rotating");
             attemptLoadingDialogDismiss();
+            // Re-enable screen rotations.
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
             showVideoAd(lastTopicString);
         }
     }

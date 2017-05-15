@@ -56,7 +56,7 @@ public class DialogManager {
     public static final int MAX_OPTIONS = 10;
     public static final int MIN_OPTIONS = 1;
 
-    public static final String DEFAULT_TOPIC_TEXT = "";
+    public static final String DEFAULT_TOPIC_TEXT = ""; // Currently blank.
     public static final String FIRST_BOOT_LOC = "first_boot";
 
     private final PrefManager prefManager;
@@ -85,7 +85,7 @@ public class DialogManager {
     }
 
     /**
-     * general helper function to load the given url in the webview on the activity layout
+     * General helper function to load the given url in the webview on the activity layout
      */
     private void loadWebView(WebView view, String url) {
         view.loadUrl(url);
@@ -137,7 +137,6 @@ public class DialogManager {
             }
         });
 
-        // TODO: set radio button listeners.
         int currentGender = prefManager.getInt(GENDER_LOC, -1);
 
         genderGroup.clearCheck();
