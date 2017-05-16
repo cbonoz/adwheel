@@ -69,8 +69,16 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     @BindView(R.id.luckyWheel)
     LuckyWheelView luckyWheelView;
 
+    @OnClick(R.id.luckyWheel) void onWheelClick() {
+        startWheel();
+    }
+
     @OnClick(R.id.spinButton)
-    void onWheelClick() {
+    void onSpinButtonClick() {
+        startWheel();
+    }
+
+    private void startWheel() {
         if (!isRunning) {
             // Prevent screen rotations temporarily
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
@@ -164,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                 });
 
         luckyWheelView.bringToFront();
-        dialogManager.showAboutDialogOnFirstBoot(this);
+        // dialogManager.showAboutDialogOnFirstBoot(this);
     }
 
     public void loadVideoAdWithTopics(List<String> topics) {
@@ -271,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         final String message = getString(R.string.ad_error) + errorCode;
         Log.e(TAG, message);
         makeToast(message);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
 
     @Override
@@ -280,7 +289,6 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
             Log.d(TAG, "show on load since spinner not rotating");
             attemptLoadingDialogDismiss();
             // Re-enable screen rotations.
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
             showVideoAd(lastTopicString);
         }
     }
@@ -294,6 +302,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     public void onRewardedVideoStarted() {
         // makeToast("Playing Video");
         Log.d(TAG, "onRewardedVideoStarted");
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
 
 }

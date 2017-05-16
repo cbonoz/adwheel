@@ -24,6 +24,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activities.intro.IntroActivity"
+            android:label="@string/app_intro" />
+
         <service
             android:name=".services.WebService"
             android:exported="false" />

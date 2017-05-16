@@ -5,10 +5,16 @@ import android.util.Log;
 
 import com.adwheel.www.wheel.BuildConfig;
 import com.adwheel.www.wheel.R;
+import com.adwheel.www.wheel.WheelApplication;
+import com.adwheel.www.wheel.activities.intro.IntroActivity;
+import com.adwheel.www.wheel.managers.DialogManager;
+import com.adwheel.www.wheel.managers.PrefManager;
 import com.daimajia.androidanimations.library.Techniques;
 import com.viksaa.sssplash.lib.activity.AwesomeSplash;
 import com.viksaa.sssplash.lib.cnst.Flags;
 import com.viksaa.sssplash.lib.model.ConfigSplash;
+
+import javax.inject.Inject;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -17,11 +23,15 @@ import com.viksaa.sssplash.lib.model.ConfigSplash;
 public class SplashActivity extends AwesomeSplash  {
     private static final String TAG = "SplashActivity";
 
+    @Inject
+    PrefManager prefManager;
+
     //DO NOT OVERRIDE onCreate()!
     //if you need to start some services do it in initSplash()!
     @Override
     public void initSplash(ConfigSplash configSplash) {
         /* you don't have to override every property */
+        WheelApplication.getInjectionComponent().inject(this);
 
         final int duration;
         if (BuildConfig.DEBUG) {
@@ -58,8 +68,24 @@ public class SplashActivity extends AwesomeSplash  {
     @Override
     public void animationsFinished() {
         // Transit to another activity here or perform other actions.
-        Intent intent = new Intent(this, MainActivity.class);
+        final Intent intent;
+        if (isFirstBoot()) {
+            intent = new Intent(this, IntroActivity.class);
+        } else {
+            intent = new Intent(this, MainActivity.class);
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+    private boolean isFirstBoot() {
+        final boolean firstBoot = prefManager.getBoolean(DialogManager.FIRST_BOOT_LOC, true);
+        if (firstBoot) {
+           return true;
+        }
+        prefManager.saveBoolean(DialogManager.FIRST_BOOT_LOC, false);
+        return false;
+    }
+
 }

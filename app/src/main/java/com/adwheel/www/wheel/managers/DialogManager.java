@@ -1,6 +1,7 @@
 package com.adwheel.www.wheel.managers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.adwheel.www.wheel.R;
 import com.adwheel.www.wheel.activities.MainActivity;
+import com.adwheel.www.wheel.activities.intro.IntroActivity;
 import com.adwheel.www.wheel.adapters.MyTopicAdapter;
 import com.adwheel.www.wheel.models.TopicsHolder;
 import com.afollestad.materialdialogs.DialogAction;
@@ -67,12 +69,24 @@ public class DialogManager {
         this.adManager = adManager;
     }
 
-    public MaterialDialog createAboutDialog(Context context) {
+    private void startTutorial(Context context) {
+        Intent intent = new Intent(context, IntroActivity.class);
+        context.startActivity(intent);
+    }
+
+    public MaterialDialog createAboutDialog(final Context context) {
         final MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .autoDismiss(true)
                 .title(R.string.about_title)
                 .customView(R.layout.about_dialog, false)
                 .positiveText(R.string.done)
+                .neutralText(R.string.app_intro)
+                .onNeutral(new SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        startTutorial(context);
+                    }
+                })
                 .build();
 
         final View view = dialog.getCustomView();
