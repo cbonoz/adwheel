@@ -17,11 +17,11 @@ public class IntroActivity extends AppIntro {
 
     private void prepareIntroSlides() {
         addSlide(AppIntro2Fragment.newInstance(getString(R.string.title_1), getString(R.string.desc_1),
-                R.drawable.ad_wheel_150, getResources().getColor(R.color.md_purple_500)));
+                R.drawable.ad_wheel_250, getResources().getColor(R.color.md_purple_500)));
         addSlide(AppIntro2Fragment.newInstance(getString(R.string.title_2), getString(R.string.desc_2),
-                R.drawable.search_screen, getResources().getColor(R.color.md_blue_500)));
+                R.drawable.search_screen, getResources().getColor(R.color.md_indigo_500)));
         addSlide(AppIntro2Fragment.newInstance(getString(R.string.title_3), getString(R.string.desc_3),
-                R.drawable.settings_screen, getResources().getColor(R.color.md_green_500)));
+                R.drawable.settings_screen, getResources().getColor(R.color.md_lime_500)));
         addSlide(AppIntro2Fragment.newInstance(getString(R.string.title_4), getString(R.string.desc_4),
                 R.drawable.spin_screen, getResources().getColor(R.color.md_grey_500)));
     }
@@ -41,8 +41,10 @@ public class IntroActivity extends AppIntro {
 
         // OPTIONAL METHODS
         // Override bar/separator color.
-        setBarColor(Color.parseColor("#3F51B5"));
-        setSeparatorColor(Color.parseColor("#2196F3"));
+        // setBarColor(Color.parseColor("#3F51B5"));
+        // setSeparatorColor(Color.parseColor("#2196F3"));
+        setBarColor(getResources().getColor(R.color.md_deep_purple_500));
+        setSeparatorColor(getResources().getColor(R.color.md_blue_grey_900));
 
         // Hide Skip/Done button.
         showSkipButton(true);

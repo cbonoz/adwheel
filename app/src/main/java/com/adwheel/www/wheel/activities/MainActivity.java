@@ -135,9 +135,11 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
         luckyWheelView.setRound(wheelHelper.getRandomNumberOfRotations());
 
+        // Executed when the spin completes.
         luckyWheelView.setLuckyRoundItemSelectedListener(new LuckyWheelView.LuckyRoundItemSelectedListener() {
             @Override
             public void LuckyRoundItemSelected(int index) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
                 isRunning = false;
                 String topicsString = data.get(index).topicString;
                 if (mAd.isLoaded()) {
@@ -279,7 +281,6 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         final String message = getString(R.string.ad_error) + errorCode;
         Log.e(TAG, message);
         makeToast(message);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
 
     @Override
