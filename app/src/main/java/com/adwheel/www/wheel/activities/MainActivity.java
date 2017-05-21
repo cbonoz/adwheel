@@ -1,9 +1,11 @@
 package com.adwheel.www.wheel.activities;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -11,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -23,6 +26,10 @@ import com.adwheel.www.wheel.managers.PrefManager;
 import com.adwheel.www.wheel.models.TopicsHolder;
 import com.adwheel.www.wheel.services.WheelHelper;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.johnpersano.supertoasts.library.Style;
+import com.github.johnpersano.supertoasts.library.Style.Duration;
+import com.github.johnpersano.supertoasts.library.SuperActivityToast;
+import com.github.johnpersano.supertoasts.library.SuperToast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
@@ -225,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     // All ad show requests must go through this function.
     private void showVideoAd(String topicString) {
         Log.d(TAG, "showVideoAd: " + topicString);
-        makeToast(topicString);
+        makeToast(getString(R.string.closest_ad) + ": " + topicString);
         if (BuildConfig.DEBUG || mAd.isLoaded()) {
             adManager.saveTopicStringToHistory(topicString);
             mAd.show();
@@ -282,7 +289,9 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     }
 
     private void makeToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        SuperToast.create(getApplicationContext(), message, Style.DURATION_SHORT)
+                .setColor(getResources().getColor(R.color.md_grey_500))
+                .show();
     }
 
     // ** Ad Video player lifecycle callback methods. ** //

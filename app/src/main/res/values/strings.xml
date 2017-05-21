@@ -12,6 +12,7 @@
 
     <string name="existing_ad_request">Waiting for existing request to finish</string>
     <string name="no_topic">no topic</string>
+    <string name="closest_ad">Closest result</string>
 
     <string name="twitter_line">Find Random Animals on Google Play - listen to sounds and get on the leaderboard</string>
 
