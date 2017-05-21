@@ -199,7 +199,11 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     private void loadLuckyWheelData() {
         final int numTopics = currentTopicsHolder.topics.size();
         data.clear();
-        final int numColors = wheelColors.length;
+        int numColors = wheelColors.length;
+        // if we have a multiple shift the color scheme to avoid two adjacent color cells.
+        if (numTopics % numColors == 1) {
+           numColors--;
+        }
         for (int i = 0; i < numTopics; i++) {
             LuckyItem luckyItem = new LuckyItem();
             luckyItem.color = wheelColors[i % numColors];
