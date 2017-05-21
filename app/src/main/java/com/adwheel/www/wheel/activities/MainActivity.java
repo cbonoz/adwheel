@@ -69,7 +69,8 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     @BindView(R.id.luckyWheel)
     LuckyWheelView luckyWheelView;
 
-    @OnClick(R.id.luckyWheel) void onWheelClick() {
+    @OnClick(R.id.luckyWheel)
+    void onWheelClick() {
         startWheel();
     }
 
@@ -139,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         luckyWheelView.setLuckyRoundItemSelectedListener(new LuckyWheelView.LuckyRoundItemSelectedListener() {
             @Override
             public void LuckyRoundItemSelected(int index) {
+                Log.d(TAG, "onSpinFinished");
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
                 isRunning = false;
                 String topicsString = data.get(index).topicString;
@@ -147,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                 } else {
                     showLoadingDialog();
                 }
-
             }
         });
 
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         Log.d(TAG, "onNavSelected: " + item.getTitle());
-
+                        // Cancel the current spin when a dialog is selected.
                         switch (item.getItemId()) {
                             case R.id.action_search:
                                 dialog = dialogManager.createSearchDialog(MainActivity.this);
@@ -177,7 +178,11 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         // dialogManager.showAboutDialogOnFirstBoot(this);
     }
 
+    // All ad load requests must come through this function.
     public void loadVideoAdWithTopics(List<String> topics) {
+        if (isRunning) {
+            return;
+        }
         AdRequest.Builder adRequestBuilder = adManager.createAdBuilderFromPrefs();
         for (String topic : topics) {
             adRequestBuilder = adRequestBuilder.addKeyword(topic);
@@ -208,6 +213,12 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         Log.d(TAG, "data: " + data);
     }
 
+//    private void cancelSpin() {
+//        Log.d(TAG, "cancelSpin");
+//        luckyWheelView.cancelSpin();
+//    }
+
+    // All ad show requests must go through this function.
     private void showVideoAd(String topicString) {
         Log.d(TAG, "showVideoAd: " + topicString);
         makeToast(topicString);
@@ -228,23 +239,37 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     }
 
     public void showLoadingDialog() {
-        loadingDialog = new MaterialDialog.Builder(this)
-                .title(R.string.loading)
-                .content(adManager.getRandomLoadingText())
-                .cancelListener(new OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        mAd.destroy(MainActivity.this);
-                        makeToast(getString(R.string.cancelled));
-                    }
-                })
-                .progress(true, 0)
-                .show();
+        Log.d(TAG, "showLoadingDialog");
+        if (isRunning) {
+            // Don't show loading dialog when the wheel is spinning.
+            makeToast(getString(R.string.existing_ad_request));
+            return;
+        }
+
+        if (mAd.isLoaded()) {
+            Log.e(TAG, "attempted to show loading dialog, but mAd is loaded");
+            return;
+        }
+
+        if (loadingDialog == null || !loadingDialog.isShowing()) {
+            loadingDialog = new MaterialDialog.Builder(this)
+                    .title(R.string.loading)
+                    .content(adManager.getRandomLoadingText())
+                    .cancelListener(new OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            mAd.destroy(MainActivity.this);
+                            makeToast(getString(R.string.cancelled));
+                        }
+                    })
+                    .progress(true, 0)
+                    .show();
+        }
     }
 
     private void attemptLoadingDialogDismiss() {
         try {
-            if (loadingDialog.isShowing()) {
+            if (loadingDialog != null && loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
         } catch (Exception e) {
@@ -253,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     }
 
     private void makeToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     // ** Ad Video player lifecycle callback methods. ** //
@@ -276,18 +301,17 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
     @Override
     public void onRewardedVideoAdFailedToLoad(int errorCode) {
-        makeToast(adManager.getMessageFromErrorCode(errorCode));
         attemptLoadingDialogDismiss();
         final String message = getString(R.string.ad_error) + errorCode;
         Log.e(TAG, message);
-        makeToast(message);
+        makeToast(adManager.getMessageFromErrorCode(errorCode));
     }
 
     @Override
     public void onRewardedVideoAdLoaded() {
         Log.d(TAG, "onRewardedVideoAdLoaded: " + lastTopicString);
         if (!isRunning) {
-            Log.d(TAG, "show on load since spinner not rotating");
+            Log.d(TAG, "show video on load since spinner not rotating");
             attemptLoadingDialogDismiss();
             // Re-enable screen rotations.
             showVideoAd(lastTopicString);
@@ -301,7 +325,6 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
     @Override
     public void onRewardedVideoStarted() {
-        // makeToast("Playing Video");
         Log.d(TAG, "onRewardedVideoStarted");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }

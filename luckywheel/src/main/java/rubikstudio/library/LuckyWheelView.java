@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -18,6 +19,9 @@ import rubikstudio.library.model.LuckyItem;
  */
 
 public class LuckyWheelView extends RelativeLayout implements PielView.PieRotateListener {
+
+    private static final String TAG = LuckyWheelView.class.getSimpleName();
+
     private int mBackgroundColor;
     private int mTextColor;
     private Drawable mCenterImage;
@@ -82,6 +86,10 @@ public class LuckyWheelView extends RelativeLayout implements PielView.PieRotate
         ivCursorView.setImageDrawable(mCursorImage);
 
         addView(frameLayout);
+    }
+
+    public void cancelSpin() {
+        pielView.cancelSpin();
     }
 
     public void setLuckyWheelBackgrouldColor(int color) {

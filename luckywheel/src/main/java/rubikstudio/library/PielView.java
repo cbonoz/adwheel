@@ -10,6 +10,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -19,6 +20,8 @@ import android.view.animation.DecelerateInterpolator;
 import java.util.List;
 
 import rubikstudio.library.model.LuckyItem;
+
+import static android.R.attr.animation;
 
 /**
  * Created by kiennguyen on 11/5/16.
@@ -219,6 +222,16 @@ public class PielView extends View {
         return (360 / mLuckyItemList.size()) * tempIndex;
     }
 
+
+    // Stops the current spin and resets the wheel.
+    public void cancelSpin() {
+        this.clearAnimation();
+        // Build is greater than 4.4.4 (safe to call cancel)
+        this.animate().cancel();
+        setRotation(0);
+        this.setPieRotateListener(null);
+    }
+
     /**
      * @param numberOfRound
      */
@@ -239,7 +252,7 @@ public class PielView extends View {
         final float middleAngle = (360 / mLuckyItemList.size()) / 2;
         // Change +middleAngle to -middleAngle
         float targetAngle = 360 * mRoundOfNumber + 270 - getAngleOfIndexTarget() - middleAngle;
-        animate()
+        this.animate()
                 .setInterpolator(new DecelerateInterpolator())
                 .setDuration(mRoundOfNumber * 1000 + 900L)
                 .setListener(new Animator.AnimatorListener() {

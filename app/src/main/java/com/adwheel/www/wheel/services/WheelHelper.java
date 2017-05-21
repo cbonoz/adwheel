@@ -5,17 +5,22 @@ import java.util.Random;
 
 public class WheelHelper {
 
+    private static final int BASE_SPINS = 5;
+
     private final Random rand;
 
     public WheelHelper() {
-        rand = new Random(System.currentTimeMillis());
+        rand = new Random();
     }
 
     public <T> int getRandomIndex(List<T> arr) {
+        // reseed the random index.
+        rand.setSeed(System.currentTimeMillis());
         return rand.nextInt(arr.size() - 1);
     }
 
     public int getRandomNumberOfRotations() {
-        return rand.nextInt(8) + 5;
+        rand.setSeed(System.currentTimeMillis());
+        return rand.nextInt(BASE_SPINS) + BASE_SPINS;
     }
 }

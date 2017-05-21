@@ -82,10 +82,9 @@ public class SplashActivity extends AwesomeSplash  {
     private boolean isFirstBoot() {
         final boolean firstBoot = prefManager.getBoolean(DialogManager.FIRST_BOOT_LOC, true);
         if (firstBoot) {
-           return true;
+            prefManager.saveBoolean(DialogManager.FIRST_BOOT_LOC, false);
         }
-        prefManager.saveBoolean(DialogManager.FIRST_BOOT_LOC, false);
-        return false;
+        return firstBoot;
     }
 
 }

@@ -8,6 +8,10 @@
     <string name="about_file">file:///android_asset/about.html</string>
 
     <string name="loading">Loading</string>
+    <string name="loading_done">Loading Done</string>
+
+    <string name="existing_ad_request">Waiting for existing request to finish</string>
+    <string name="no_topic">no topic</string>
 
     <string name="twitter_line">Find Random Animals on Google Play - listen to sounds and get on the leaderboard</string>
 

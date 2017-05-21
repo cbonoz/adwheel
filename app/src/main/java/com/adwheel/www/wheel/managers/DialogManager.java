@@ -327,7 +327,10 @@ public class DialogManager {
                     @Override
                     public void onInject(final TopicsHolder data, IViewInjector injector) {
                         final String metaData = String.format(Locale.US, "%s", new Date(data.timestamp));
-                        final String topicString = TextUtils.join(",", data.topics);
+                        String topicString = TextUtils.join(",", data.topics);
+                        if (topicString.isEmpty()) {
+                            topicString = context.getString(R.string.no_topic);
+                        }
                         injector.text(R.id.topics, topicString)
                                 .text(R.id.metadata, metaData)
                                 .textColor(R.id.metadata, R.color.primary_light)
