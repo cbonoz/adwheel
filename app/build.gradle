@@ -4,7 +4,7 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            keyAlias 'animals'
+            keyAlias 'adwheel'
             keyPassword '111111'
             storeFile file('/Users/cbuonocore/keyvault/keystore.jks')
             storePassword '111111'
@@ -16,8 +16,8 @@ android {
         applicationId "com.adwheel.www.wheel"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 4
-        versionName "1.2-b"
+        versionCode 5
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

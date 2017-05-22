@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
         lastTopicString = TextUtils.join(",", adRequest.getKeywords());
         Log.d(TAG, "loadVideo with topics: " + lastTopicString);
-        mAd.loadAd(getString(R.string.test_ad_unit_id), adRequest);
+        mAd.loadAd(getString(R.string.video_ad_unit_id), adRequest);
     }
 
     private static final int[] wheelColors = new int[]{0xffEDE7F6, 0xffD1C4E9, 0xffB39DDB, 0xffD8BFD8};
