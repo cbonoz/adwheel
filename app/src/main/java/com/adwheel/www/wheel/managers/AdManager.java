@@ -138,6 +138,7 @@ public class AdManager {
     public void saveTopicStringToHistory(String topicString) {
         final long count = prefManager.getLong(HISTORY_COUNT_LOC, 0);
         final String saveLoc = HISTORY_LOC + count;
+        topicString = capitalizeFirstLetter(topicString);
 
         final String[] topics = topicString.split(",");
         final TopicsHolder item = new TopicsHolder(Arrays.asList(topics), System.currentTimeMillis());
@@ -191,5 +192,12 @@ public class AdManager {
             default:
                 return "I could not find a video, perhaps try changing your settings below";
         }
+    }
+
+    public String capitalizeFirstLetter(String original) {
+        if (original == null || original.length() == 0) {
+            return original;
+        }
+        return original.substring(0, 1).toUpperCase() + original.substring(1);
     }
 }

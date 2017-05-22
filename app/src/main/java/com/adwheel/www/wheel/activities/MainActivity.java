@@ -185,6 +185,15 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         // dialogManager.showAboutDialogOnFirstBoot(this);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
+
     // All ad load requests must come through this function.
     public void loadVideoAdWithTopics(List<String> topics) {
         if (isRunning) {
@@ -232,7 +241,8 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     // All ad show requests must go through this function.
     private void showVideoAd(String topicString) {
         Log.d(TAG, "showVideoAd: " + topicString);
-        makeToast(getString(R.string.closest_ad) + ": " + topicString);
+        makeToast(getString(R.string.closest_ad) + ": " +
+                adManager.capitalizeFirstLetter(topicString));
         if (BuildConfig.DEBUG || mAd.isLoaded()) {
             adManager.saveTopicStringToHistory(topicString);
             mAd.show();

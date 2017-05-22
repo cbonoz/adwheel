@@ -14,16 +14,6 @@
     <string name="no_topic">no topic</string>
     <string name="closest_ad">Closest result</string>
 
-    <string name="twitter_line">Find Random Animals on Google Play - listen to sounds and get on the leaderboard</string>
-
-    <string name="username">Username</string>
-    <string name="dialog_username">Change Username</string>
-    <!--<string name="dialog_username_hint">Whatever you want</string>-->
-    <string name="username_text">Leaderboard Username: <b>%1$s</b></string>
-    <!--How much of an animal sounds freak are you?\n\t-->
-    <!--<string name="profile_desc_text"><b>Here are your listening counts for this device. These counts appear on the animal leaderboards:</b></string>-->
-    <string name="profile_desc_text">Your LeaderBoard Scores:</string>
-
     <string name="ad_app_id">ca-app-pub-5780102660170607~8350238373</string>
     <string name="video_ad_unit_id">ca-app-pub-5780102660170607/6733904373</string>
     <!--TODO: Change this, For Testing ONLY-->
