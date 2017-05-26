@@ -88,7 +88,6 @@
     <string name="desc_2">Search by category using our keyword autocomplete, or search for something completely new.</string>
     <string name="desc_3">You have full control over the ads, change your settings to whatever you like.
         AdWheel automatically saves your search history in case results change later.</string>
-    <!--<string name="desc_4">AdWheel automatically saves your history in case results change later!</string>-->
     <string name="desc_4">Or simply spin the main wheel for a random category.
         You can cancel ads and search again at any time.</string>
 

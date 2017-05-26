@@ -11,7 +11,7 @@ public class SoundPoolPlayer {
     private HashMap mSounds = new HashMap();
 
     public SoundPoolPlayer(Context pContext) {
-        // setup Soundpool
+        // Setup Soundpool
         this.mShortPlayer = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
 
 
