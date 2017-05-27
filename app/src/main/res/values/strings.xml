@@ -17,7 +17,7 @@
     <string name="ad_app_id">ca-app-pub-5780102660170607~8350238373</string>
     <string name="video_ad_unit_id">ca-app-pub-5780102660170607/6733904373</string>
     <!--TODO: Change this, For Testing ONLY-->
-    <string name="test_ad_unit_id">ca-app-pub-3940256099942544/5224354917</string>
+    <string name="test_only_ad_unit_id">ca-app-pub-3940256099942544/5224354917</string>
 
     <string name="add_topic">ADD TOPIC</string>
     <string name="family_oriented">Family Oriented</string>

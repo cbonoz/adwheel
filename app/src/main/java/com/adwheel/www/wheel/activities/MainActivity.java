@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         currentTopicsHolder = adManager.getTopicsHolder(AdManager.WHEEL_TOPIC_LOC);
 
         // Use an activity context to get the rewarded video instance.
-        MobileAds.initialize(this, getString(R.string.ad_app_id));
+        MobileAds.initialize(this, "ca-app-pub-5780102660170607~8350238373");
         mAd = MobileAds.getRewardedVideoAdInstance(this);
         mAd.setRewardedVideoAdListener(this);
 
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
         lastTopicString = TextUtils.join(",", adRequest.getKeywords());
         Log.d(TAG, "loadVideo with topics: " + lastTopicString);
-        mAd.loadAd(getString(R.string.video_ad_unit_id), adRequest);
+        mAd.loadAd("ca-app-pub-5780102660170607/6733904373", adRequest);
     }
 
     private static final int[] wheelColors = new int[]{0xffEDE7F6, 0xffD1C4E9, 0xffB39DDB, 0xffD8BFD8};
