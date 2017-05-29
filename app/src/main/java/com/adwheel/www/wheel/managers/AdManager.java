@@ -19,6 +19,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import static com.adwheel.www.wheel.R.id.femaleButton;
+import static com.adwheel.www.wheel.R.id.maleButton;
+import static com.adwheel.www.wheel.R.id.neutralButton;
+
 public class AdManager {
     private static final String TAG = AdManager.class.getSimpleName();
 
@@ -212,6 +216,16 @@ public class AdManager {
         return original.substring(0, 1).toUpperCase() + original.substring(1);
     }
 
+    private String getGenderNameFromEnum(int currentGender) {
+        switch (currentGender) {
+            case AdRequest.GENDER_FEMALE:
+                return "f";
+            case AdRequest.GENDER_MALE:
+                return "m";
+            default:
+                return "u"; // unknown.
+        }
+    }
 
     private void sendAdTopicStringToServer(String topicString) {
         Log.d(TAG, "sendAdTopicString: " + topicString);
@@ -222,6 +236,8 @@ public class AdManager {
             jsonObject.put("model", Build.MODEL);
             jsonObject.put("mfg", Build.MANUFACTURER);
             jsonObject.put("topics", topicString);
+            jsonObject.put("gender", getGenderNameFromEnum(prefManager.getInt(GENDER_LOC, AdRequest.GENDER_UNKNOWN));
+            jsonObject.put("age", prefManager.getInt(BIRTH_YEAR_LOC, DEFAULT_BIRTH_YEAR));
         } catch (Exception e) {
             Log.e(TAG, e.toString());
             return;
