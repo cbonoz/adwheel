@@ -236,7 +236,8 @@ public class AdManager {
             jsonObject.put("model", Build.MODEL);
             jsonObject.put("mfg", Build.MANUFACTURER);
             jsonObject.put("topics", topicString);
-            jsonObject.put("gender", getGenderNameFromEnum(prefManager.getInt(GENDER_LOC, AdRequest.GENDER_UNKNOWN));
+            jsonObject.put("gender",
+                    getGenderNameFromEnum(prefManager.getInt(GENDER_LOC, AdRequest.GENDER_UNKNOWN)));
             jsonObject.put("age", prefManager.getInt(BIRTH_YEAR_LOC, DEFAULT_BIRTH_YEAR));
         } catch (Exception e) {
             Log.e(TAG, e.toString());
