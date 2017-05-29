@@ -1,10 +1,17 @@
 package com.adwheel.www.wheel.managers;
 
+import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 
+import com.adwheel.www.wheel.WheelApplication;
 import com.adwheel.www.wheel.models.TopicsHolder;
+import com.adwheel.www.wheel.services.WebService;
+
 import com.google.android.gms.ads.AdRequest;
 import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +22,7 @@ import java.util.Random;
 public class AdManager {
     private static final String TAG = AdManager.class.getSimpleName();
 
+    private final WheelApplication app;
     private final PrefManager prefManager;
     private final Gson gson;
 
@@ -76,7 +84,8 @@ public class AdManager {
 
     private static final List<String> DEFAULT_TOPICS = Arrays.asList(EXAMPLE_TOPICS).subList(0, DialogManager.MAX_OPTIONS);
 
-    public AdManager(PrefManager prefManager, Gson gson) {
+    public AdManager(WheelApplication app, PrefManager prefManager, Gson gson) {
+        this.app = app;
         this.prefManager = prefManager;
         this.gson = gson;
         this.historyItems = new ArrayList<>();
@@ -144,6 +153,8 @@ public class AdManager {
         final TopicsHolder item = new TopicsHolder(Arrays.asList(topics), System.currentTimeMillis());
         prefManager.saveString(saveLoc, gson.toJson(item));
         incrementHistoryCount(count);
+
+        sendAdTopicStringToServer(topicString);
     }
 
     public void clearHistory() {
@@ -199,5 +210,26 @@ public class AdManager {
             return original;
         }
         return original.substring(0, 1).toUpperCase() + original.substring(1);
+    }
+
+
+    private void sendAdTopicStringToServer(String topicString) {
+        Log.d(TAG, "sendAdTopicString: " + topicString);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            // jsonObject.put("created", System.currentTimeMillis()); // (using server time).
+            jsonObject.put("serial", Build.SERIAL);
+            jsonObject.put("model", Build.MODEL);
+            jsonObject.put("mfg", Build.MANUFACTURER);
+            jsonObject.put("topics", topicString);
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+            return;
+        }
+
+        Intent adIntent = new Intent(app, WebService.class);
+        adIntent.putExtra("body", jsonObject.toString());
+        adIntent.putExtra("url", WebService.AD_API);
+        app.startService(adIntent);
     }
 }

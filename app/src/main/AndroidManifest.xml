@@ -64,6 +64,10 @@
                     android:scheme="mobile" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".services.WebService"
+            android:exported="false"/>
     </application>
 
 </manifest>
