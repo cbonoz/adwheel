@@ -1,2 +1,0 @@
-json_key_file "~/Documents/fastlane_android_key.json" # Path to the json secret file - Follow https://github.com/fastlane/supply#setup to get one
-package_name "com.randomanimals.www.randomanimals" # e.g. com.krausefx.apa

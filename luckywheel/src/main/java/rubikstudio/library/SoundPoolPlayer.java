@@ -13,8 +13,6 @@ public class SoundPoolPlayer {
     public SoundPoolPlayer(Context pContext) {
         // Setup Soundpool
         this.mShortPlayer = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
-
-
         mSounds.put(R.raw.click_one, this.mShortPlayer.load(pContext, R.raw.click_one, 1));
     }
 
