@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.randomanimals.www.randomanimals", appContext.getPackageName());
+        assertEquals("com.adwheel.www.wheel", appContext.getPackageName());
     }
 }
