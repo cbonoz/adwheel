@@ -326,6 +326,11 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     }
 
     @Override
+    public void onRewardedVideoCompleted() {
+        Log.d(TAG, "video completed");
+    }
+
+    @Override
     public void onRewardedVideoAdLoaded() {
         Log.d(TAG, "onRewardedVideoAdLoaded: " + lastTopicString);
         if (!isRunning) {

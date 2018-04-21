@@ -51,9 +51,10 @@ import static com.adwheel.www.wheel.managers.AdManager.FAMILY_LOC;
 import static com.adwheel.www.wheel.managers.AdManager.GENDER_LOC;
 import static com.adwheel.www.wheel.managers.AdManager.SEARCH_TOPIC_LOC;
 import static com.adwheel.www.wheel.managers.AdManager.WHEEL_TOPIC_LOC;
-import static com.google.android.gms.internal.zzt.TAG;
 
 public class DialogManager {
+
+    private static final String TAG = DialogManager.class.getSimpleName();
 
     public static final int MAX_OPTIONS = 10;
     public static final int MIN_OPTIONS = 1;

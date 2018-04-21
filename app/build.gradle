@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 // keytool -list -v -keystore randomanimals.jks
 android {
     signingConfigs {
+        // Fake password - replace.
         config {
             keyAlias 'adwheel'
             keyPassword '111111'
@@ -11,14 +12,14 @@ android {
         }
     }
 
-    compileSdkVersion 27
+    compileSdkVersion 25
     buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.adwheel.www.wheel"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 25
         versionCode 10
-        versionName "1.2.1"
+        versionName "1.2.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -44,7 +45,13 @@ android {
 repositories {
     jcenter()
     mavenCentral()
-    maven { url "https://jitpack.io" }
+    maven {
+        url "https://jitpack.io"
+    }
+    maven {
+        url "https://maven.google.com"
+    }
+
 }
 
 dependencies {
@@ -54,17 +61,19 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+    implementation('com.afollestad.material-dialogs:core:0.9.4.4') {
+        transitive = true
+    }
     implementation 'com.github.paolorotolo:appintro:4.1.0'
     implementation 'net.idik:slimadapter:2.1.2'
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'
     implementation 'org.adw.library:discrete-seekbar:1.0.1'
-    implementation 'com.afollestad.material-dialogs:core:0.9.4.4'
-    implementation 'com.google.firebase:firebase-ads:10.2.4'
+    implementation 'com.google.firebase:firebase-ads:15.0.0'
+    implementation 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'
+    implementation 'com.github.kanytu:android-parallax-recyclerview:v1.7'
     implementation 'com.android.support:appcompat-v7:25.3.1'
     implementation 'com.android.support:cardview-v7:25.3.1'
     implementation 'com.android.support:recyclerview-v7:25.3.1'
-    implementation 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'
-    implementation 'com.github.kanytu:android-parallax-recyclerview:v1.7'
     implementation 'com.android.support:support-v4:25.3.1'
     implementation 'com.android.support:design:25.3.1'
     implementation 'com.google.code.gson:gson:2.8.2'
@@ -75,7 +84,6 @@ dependencies {
     implementation 'com.pavelsikun:materialdesignicons:1.0'
     implementation 'com.google.dagger:dagger:2.14.1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support:support-annotations:25.3.1'
     androidTestImplementation 'tools.fastlane:screengrab:1.0.2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.14.1'
