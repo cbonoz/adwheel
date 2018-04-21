@@ -3,13 +3,13 @@
 
 https://play.google.com/store/apps/details?id=com.adwheel.www.wheel&hl=en
 
-AdWheel is a novelty/entertainment mobile app for Android that puts users in charge of their advertising experience(s).
+AdWheel is a novelty/entertainment mobile app for Android that puts users in charge of their advertising experiences.
 
 ### Current State of the Mobile Advertising Market:
 
 * Users often have ads forced upon them by the mobile app without choice or preference of what ad is displayed to them (or when).
 * Such Ads are often not cancellable without exiting an application
-*
+
 ### Concept
 -- AdWheel
 <ol>
